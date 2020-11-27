@@ -2,6 +2,17 @@
 <html>
 <head>
 <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="975124663159-q37pcek6dhp9vlido8qkk5euh57sqeu9.apps.googleusercontent.com">
+<script>
+function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+}
+</script>
 </head>
 <body>
 <!-- 네이버아이디로로그인 버튼 노출 영역 -->
@@ -24,5 +35,59 @@
 
 </script>
 <!-- // 네이버아이디로로그인 초기화 Script -->
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="/__/firebase/8.1.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="/__/firebase/8.1.1/firebase-analytics.js"></script>
+
+<!-- Initialize Firebase -->
+<script src="/__/firebase/init.js"></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyDwMYnkiXywcpwhC8OX0iQGHRwdZLnEm2o",
+    authDomain: "webproject-f85df.firebaseapp.com",
+    databaseURL: "https://webproject-f85df.firebaseio.com",
+    projectId: "webproject-f85df",
+    storageBucket: "webproject-f85df.appspot.com",
+    messagingSenderId: "505722645824",
+    appId: "1:505722645824:web:8edc2cb13f06ccf175dea5",
+    measurementId: "G-HFWKZR7F96"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+	var provider = new firebase.auth.GoogleAuthProvider();
+
+	firebase.auth().signInWithPopup(provider).then(function(result) {
+  // This gives you a Google Access Token. You can use it to access the Google API.
+  var token = result.credential.accessToken;
+  // The signed-in user info.
+  var user = result.user;
+  // ...
+}).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // The email of the user's account used.
+  var email = error.email;
+  // The firebase.auth.AuthCredential type that was used.
+  var credential = error.credential;
+  // ...
+});
+</script>
+
 </body>
 </html>
