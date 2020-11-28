@@ -7,12 +7,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../html5up-editorial\assets\css\main.css" />
 
+
 	</head>
 	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
 	<!-- Header -->
 <div class="inner">
 	<header id="header">
-		<a href="index.html" class="logo"><h1><strong>E-tube</strong></h1> </a>
+		<a href="index.html" class="logo"><h1>E-tube</h1> </a>
 
 		<!-- Search -->
 		<section id="search" class="alt">
@@ -22,116 +29,214 @@
 		</section>
 
 		<ul class="icons">
-			<li><a href="#" class=""><span class="label"><h1>LOGIN</h1></span></a></li>
+			<li><a href="login.html" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449"> 로그인</span></a></li>
 		</ul>
 
 	</header>
-</div>
-
-
-
-
-
-
-
-		<!-- Wrapper -->
-			<div id="wrapper" style="float: left;" >
 
 				<!-- Main -->
 					<div id="main">
-						<div class="" style="margin-top: 2em; height: 200px; border: 3px solid red;">
+						<div class="" style="margin-top: 2em; height: 160px; position:relative; ">
 
 							<!-- Section -->
-              <section style="padding: 3em 0 4em 2em ;  ">
 
-                <div style="height: 160px; width: 200px; float:left;">
-                  <a href="#" class="test"> <img src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\고양이1.jpg" width="200px" height="150px"
-                  ></img> </a>
+                <div class="image-container" style="height: 120px; width: 160px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px">
+                  <a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU"></img> </a>
                 </div>
-              <div style="vertical-align: top;height: 160px; width: 400px; float:left;">
-                  <strong><h2>고양이채널</h2><br></strong>
-                  구독자수, 동영상 수
+              	<div style="height: 120px; width: 400px; left:160px; width:30%; position:absolute;margin:20px;">
+								  <a href="channel_private.html">
+										<h2 style="margin-top:15px; margin-left:15px">고양이채널</h2>
+									</a>
+										<p style="margin-left:15px">구독자수, 영상수</p>
+								</div>
 
-              </div>
-
-                <div style="height: 160px; width: 100px; float:left;  ">
-                  <ul class="actions">
+                <div style="height: 120px; width: 100px; float:right;margin:20px;">
+                  <ul class="actions" style="margin-top:40px;" >
                     <li><a href="#" class="button">구독</a></li>
                   </ul>
                 </div>
 
-              </section>
-              </div>
 
+            </div>
 
+                <nav style=" height:50px; width:100%; margin-top:10px;  ">
+  									<ul style="list-style-type:none; margin:0px; padding:0px">
+											<li style="float:left; width:20%;height:100%;line-height:50px;vertical-align:middle; position:relative; text-align:center;"><a href="#" style="color:#3D4449"><p>강의영상</p></a></li>
+											<li style="float:left; width:20%;height:100%;line-height:50px;vertical-align:middle; position:relative;text-align:center;"><a href="#" style="color:#3D4449"><p>재생목록</p></a></li>
+											<li style="float:left; width:60%;height:100%;line-height:50px;" id="search" class="alt">
+												<form method="post" action="#" style="margin:4.5px">
+													<input type="text" name="query" id="query" placeholder="Search" />
+												</form>
+				              </li>
+										</ul>
+								</nav>
 
+								<!--정렬 부분 수정
+								<nav>
+									<ul>
+										<li>
+											<span class="opener">정렬</span>
+											<ul>
+												<li><a href="#">최신순</a></li>
+												<li><a href="#">조회순</a></li>
+												<li><a href="#">추천순</a></li>
+											</ul>
+										</li>
+									</ul>
+								</nav>  -->
 
+								<div class="inner">
+									<section>
+				  					<div class="" style="margin-top:5px; height:240px; position:relative; background-color:#F1F1F1 ">
+											<div class="image-container" style="height:200px; width:350px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px; position:absolute">
+												<a href="#" class="test"> <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg"></img> </a>
+											</div>
+											<div style="height: 200px;left:350px; width:40%; position:absolute; margin:20px">
+					  						<a href="#" >
+													<h2 style="margin-top:10px; margin-left:10px">고양이 샤워시키는 방법</h2>
+												</a>
+												<p style="margin-left:10px;">조회수,추천수<br>
+													<a href="#">강의 자료 링크</a></p>
 
+												<div style="margin:10px" class="conatiner">
+													<div class="prog" style="background:#FFFFFF">
+														<div class="progs" id="progressing" style="width:0%; height:30px; background:#FF8080;color:#fff;text-align: center;line-height: 30px;" ></div>
+													</div>
+												</div>
 
-              <section style="padding: 1em 0 3em 2em; margin-top: 1em;border: 2px solid red;">
+												<script>
+        									function moveBtn(){
+            							var ele=document.getElementById('progressing');
+            							var width = 5;
+            							var id =setInterval(frame, 45);
+            							function frame(){
+                						if(width>=100){
+                    					clearInterval(id);
+                						}else{
+                    					width ++;
+                    					ele.style.width=width+"%";
+                    					ele.innerHTML=width+"%";
+                							}
+            								}
+        									}
+    										</script>
+											</div>
 
-                <div style=" height: 2em; width: 200px; float:left; ">
-                강의자료
-                </div>
-              <div style="vertical-align: top;height: 1em; width: 200px; float:left;">
-                  채널 목록
+											<div style="height: 200px; width: 100px; float:right;margin:20px;">
+												<button style="margin-top:70px;" onClick="moveBtn()">test</button>
+											</div>
+										</div>
+									</section>
 
-              </div>
+									<section>
+				  					<div class="" style=" height:240px; position:relative; background-color:#F1F1F1 ">
+											<div class="image-container" style="height:200px; width:350px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px; position:absolute">
+												<a href="#" class="test"> <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg"></img> </a>
+											</div>
+											<div style="height: 200px;left:350px; width:40%; position:absolute; margin:20px">
+					  						<a href="#" >
+													<h2 style="margin-top:10px; margin-left:10px">고양이 샤워시키는 방법</h2>
+												</a>
+												<p style="margin-left:10px;">조회수,추천수<br>
+													<a href="#">강의 자료 링크</a></p>
 
-                <div style="height: 1em; width: 70px; float:left;">
+												<div style="margin:10px" class="conatiner">
+													<div class="prog" style="background:#FFFFFF">
+														<div class="progs" id="progressing" style="width:0%; height:30px; background:#FF8080;color:#fff;text-align: center;line-height: 30px;" ></div>
+													</div>
+												</div>
 
-                  <nav id="menu">
-  									<ul>
+												<script>
+        									function moveBtn(){
+            							var ele=document.getElementById('progressing');
+            							var width = 5;
+            							var id =setInterval(frame, 45);
+            							function frame(){
+                						if(width>=100){
+                    					clearInterval(id);
+                						}else{
+                    					width ++;
+                    					ele.style.width=width+"%";
+                    					ele.innerHTML=width+"%";
+                							}
+            								}
+        									}
+    										</script>
+											</div>
 
-  										<li>
-  											<span class="opener">정렬</span>
-  											<ul>
-  												<li><a href="#">추천순</a></li>
-  												<li><a href="#">조회순</a></li>
-  												<li><a href="#">최신순</a></li>
-  											</ul>
-  										</li>
+											<div style="height: 200px; width: 100px; float:right;margin:20px;">
+												<button style="margin-top:70px;" onClick="moveBtn()">test</button>
+											</div>
+										</div>
+									</section>
+								</div>
+					</div>
+				</div>
+			</div>
 
-  									</ul>
-  								</nav>
+			<div id="sidebar">
+			<div class="inner">
 
-                </div>
+				<!-- Menu -->
+					<nav id="menu">
+						<header class="major">
+							<h2>카테고리</h2>
+						</header>
+						<ul>
+							<li>
+								<span class="opener">스포츠</span>
+								<ul>
+									<li><a href="#">농구</a></li>
+									<li><a href="#">야구</a></li>
+									<li><a href="#">축구</a></li>
+									<li><a href="#">수영</a></li>
+								</ul>
+							</li>
+							<li>
+								<span class="opener">음악</span>
+								<ul>
+									<li><a href="#">피아노</a></li>
+									<li><a href="#">기타</a></li>
+									<li><a href="#">플룻</a></li>
+									<li><a href="#">바이올린</a></li>
+								</ul>
+							</li>
+							<li>
+								<span class="opener">생활</span>
+								<ul>
+									<li><a href="#">청소</a></li>
+									<li><a href="#">저축</a></li>
+									<li><a href="#">요리</a></li>
+									<li><a href="#">교육</a></li>
+								</ul>
+							</li>
+							<li>
+								<span class="opener">컴퓨터</span>
+								<ul>
+									<li><a href="#">웹프로그래밍</a></li>
+									<li><a href="#">데이터베이스</a></li>
+									<li><a href="#">데이터통신</a></li>
+									<li><a href="#">언어(자바/c++)</a></li>
+								</ul>
+							</li>
+							<li>
+								<span class="opener">게임</span>
+								<ul>
+									<li><a href="#">롤</a></li>
+									<li><a href="#">피파</a></li>
+									<li><a href="#">메이플</a></li>
+									<li><a href="#">카트라이더</a></li>
+								</ul>
+							</li>
+							<li><a href="index.html">스터디게시판</a></li>
 
-              <div style="height: 1em; width: 200px; float:left;">
-                    <input type="text" name="query" id="query" placeholder="Search" />
-              </div>
+						</ul>
+					</nav>
 
-              </section>
-
-              <div>
-                <section style="padding: 3em 0 4em 2em ;  ">
-
-                  <div style="height: 160px; width: 200px; float:left;">
-                    <a href="#" class="test"> <img src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\고양이3.jpg" width="200px" height="150px"
-                    ></img> </a>
-                  </div>
-                <div style="vertical-align: top;height: 160px; width: 400px; float:left;">
-                    <strong><h2>집사구하는 냥이</h2><br></strong>
-                    조회수 추천수<br>
-                    업로드 날짜<br>
-                    <a href="#">강의 자료 링크</a>
-                </div>
-
-                  <div style="height: 160px; width: 100px; float:left;  ">
-                    <ul class="actions">
-                      <li><a href="#" class="button">구독</a></li>
-                    </ul>
-                  </div>
-
-                </section>
-              </div>
-
-
-
-					 </div>
 
 				</div>
-
+			</div>
+		</div>
 
 
 
