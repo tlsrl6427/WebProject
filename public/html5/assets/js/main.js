@@ -259,4 +259,28 @@
 
 			});
 
+
+// 검색기능 추가
+function search_channel(){
+var searchChannelName = document.getElementBYId("queary").value;
+var searchref = db.ref(value);
+
+firebase.database().ref('DB채널이름있는경로').startAt(searchChannelName).on("value",function(snapshot){
+if(snapshot.val()){
+var chName = snapshot.key;
+var chVideoNum = snapshot.val().videonum;
+var chSubscribe = snapshot.val().subscribe;
+
+
+}
+else {
+
+}
+
+});
+
+
+
+
+
 })(jQuery);
