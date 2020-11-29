@@ -8,15 +8,43 @@
 		<link rel="stylesheet" href="../../html5/assets/css/main.css" />
 
 
-<script defer src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/7.23.0/firebase-auth.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/7.23.0/firebase-firestore.js"></script>
-<script defer src="./init-firebase.js"></script>
-<script>
-var storageRef = firebase.storage();
-var pathRef = storage.ref('basketball_1.jpg');
+		<!-- The core Firebase JS SDK is always required and must be listed first -->
 
+<script src="/__/firebase/8.1.1/firebase-app.js"></script>
+<script src="/__/firebase/8.1.1/firebase-storage.js"></script>
+<!-- Initialize Firebase -->
+<script src="/__/firebase/init.js"></script>
 
+		<script>
+		  // Your web app's Firebase configuration
+		  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+		  var firebaseConfig = {
+		    apiKey: "AIzaSyDwMYnkiXywcpwhC8OX0iQGHRwdZLnEm2o",
+		    authDomain: "webproject-f85df.firebaseapp.com",
+		    databaseURL: "https://webproject-f85df.firebaseio.com",
+		    projectId: "webproject-f85df",
+		    storageBucket: "webproject-f85df.appspot.com",
+		    messagingSenderId: "505722645824",
+		    appId: "1:505722645824:web:8edc2cb13f06ccf175dea5",
+		    measurementId: "G-HFWKZR7F96"
+		  };
+		  // Initialize Firebase
+			if (firebase.apps.length === 0) {
+		  firebase.initializeApp(firebaseConfig);
+		}
+		</script>
+		<script>
+		var storageRef = firebase.storage().ref();
+		var pathRef = storageRef.child('basketball_1.jpg');
+
+		function downImgURL(){pathRef.getDownloadURL().then(function(url){
+			var imgPath=url;
+			console.log(imgPath);
+		}).catch(function(error){
+			alert(error.message);
+		});
+
+		}
 </script>
 	</head>
 	<body class="is-preload">
@@ -51,8 +79,9 @@ var pathRef = storage.ref('basketball_1.jpg');
               <section style="padding: 3em 0 4em 2em ;  ">
 
                 <div style="height: 160px; width: 200px; float:left;">
-                  <a href="#" class="test"> <img src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\고양이1.jpg" width="200px" height="150px"
-                  ></img> </a>
+                  <a href="#" class="test"> <img src="https://firebasestorage.googleapis.com/v0/b/webproject-f85df.appspot.com/o/basketball_1.jpg?alt=media&token=ccf8e044-1cc4-4f8e-b95e-781345ebb758" width="200px" height="150px"
+                  >
+                  </img> </a>
                 </div>
               <div style="vertical-align: top;height: 160px; width: 400px; float:left;">
                   <strong><h2>농구채널</h2><br></strong>
@@ -62,7 +91,10 @@ var pathRef = storage.ref('basketball_1.jpg');
 
                 <div style="height: 160px; width: 100px; float:left;  ">
                   <ul class="actions">
-                    <li><a href="#" class="button">구독</a></li>
+                    <li><button onclick="downImgURL()">구독</button></li>
+										<script>
+
+										</script>
                   </ul>
                 </div>
 
