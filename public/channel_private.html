@@ -6,7 +6,24 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../html5up-editorial\assets\css\main.css" />
+		<style>
+		ul, li{
+        list-style:none;
+        text-align:center;
+        padding:0;
+        margin:0;
+				color:#3D4449
+			}
+		#liSearchOption {clear:both;}
+		#liSearchOption > div {
+				margin:0 auto;
+				margin-top: 30px;
+				width:auto;
+				height:100px;
 
+			}
+		</style>
+		</div>
 
 	</head>
 	<body class="is-preload">
@@ -73,21 +90,19 @@
 										</ul>
 								</nav>
 
-								<!--정렬 부분 수정
-								<nav>
-									<ul>
-										<li>
-											<span class="opener">정렬</span>
-											<ul>
-												<li><a href="#">최신순</a></li>
-												<li><a href="#">조회순</a></li>
-												<li><a href="#">추천순</a></li>
-											</ul>
-										</li>
-									</ul>
-								</nav>  -->
+								<li id='liSearchOption'>
+										<div style=" margin:0px; float:left;">
+												<select id='selSearchOption' >
+														<option value='A'>최신순</option>
+														<option value='T'>조회순</option>
+														<option value='C'>추천순</option>
+												</select>
 
-								<div class="inner">
+										</div>
+								</li>
+
+
+								<div class="inner" >
 									<section>
 				  					<div class="" style="margin-top:5px; height:240px; position:relative; background-color:#F1F1F1 ">
 											<div class="image-container" style="height:200px; width:350px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px; position:absolute">
