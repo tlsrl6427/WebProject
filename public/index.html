@@ -12,6 +12,19 @@ function openWindowPop(url, name){
     window.open(url, name, options);
 }
 </script>
+/*
+<script>
+/*
+window.addEventListener("message", function(event){
+	if(event.data=="logined"){
+		alert("aesreajuie");
+		var loginBtn = document.getElementById("loginBtn");
+	  loginBtn.innerHTML = "로그아웃";
+	}
+});
+*/
+</script>
+*/
 	</head>
 	<body class="is-preload">
 
@@ -34,7 +47,7 @@ function openWindowPop(url, name){
 		</section>
 
 		<ul class="icons">
-			<li><a href="javascript:openWindowPop('login.html', 'popup');" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449"> 로그인</span></a></li>
+			<li><a href="javascript:openWindowPop('login.html', 'popup');" class="fa fa-user-circle fa-lg"><span id="loginBtn" class="label" style="color:#3D4449"> 로그인</span></a></li>
 		</ul>
 
 	</header>
