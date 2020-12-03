@@ -41,8 +41,8 @@ window.addEventListener("message", function(event){
 
 		<!-- Search -->
 		<section id="search" class="alt">
-			<form method="post" action="channel_select.html">
-				<input type="text" onkeypress="if(event.keyCode == 13){search_channel();}"name="query" id="query" placeholder="Search" />
+			<form method="get" action="channel_select.html">
+				<input type="text" name="query" id="query" placeholder="Search" />
 			</form>
 		</section>
 
@@ -190,6 +190,63 @@ window.addEventListener("message", function(event){
 			</div>
 
 
+
+
+			<script>
+			function search_channel() {
+			var searchChannelName = document.getElementById("query").value;
+			document.getElementById("select_channl_name").textContent = "chName";
+			// var searchref = db.ref(value);
+
+			firebase.database().ref("testsearch").startAt(searchChannelName).on("value",function(snapshot){
+			if(snapshot.val() ) {
+			var chName = snapshot.key;
+			var chVideoNum = snapshot.val().videonum;
+			var chSubscribe = snapshot.val().subscribe;
+			var chImg = snapshot.val().channel_img_ref;
+			var chLink = snapshot.val().channel_ref;
+
+			//document.getElementById("select_channl_link").href = chLink ;
+			//document.getElementById("select_channl_video").img = chImg;
+			//document.getElementById("select_channl_name").textContent = chName;
+			//document.getElementById("select_channl_videonum").textContent = "조회수 : "+ chVideoNum + " 구독자수 : "+ chSubscribe ;
+
+
+			var channel_select_page =
+			"<section>"
+				"<div class=\"\" style=\" margin-left:8%; height: 250px; position:relative; \">"
+
+					"<div class=\"image-container\" style=\"height: 210px; width: 280px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px\">"
+						"<a href="+ chLink + " class=\"test\"> <img src="+ chImg + "></img> </a>"
+					"</div>"
+					"<div style=\"height: 210px; width: 400px; left:280px; width:30%; position:absolute;margin:20px;\">"
+						"<a href="+ chLink + ">"
+							"<h2 style=\"margin-top:40px; margin-left:15px\">"+ chName + "</h2>"
+						"</a>"
+						"<p style=\"margin-left:15px\"> 구독자수: " +chSubscribe + " 영상수: "+ chVideoNum + "<br>"
+						"<a href=\"#\">채널주인스펙확인</a></p>"
+					"</div>"
+
+					"<div style=\"height: 210px; margin:20px; float:right; width:300px; width:20%\">"
+						"<ul class=\"actions\" style=\"margin-top:85px;\" >"
+							"<li><a href=\"#\" class=\"button\">구독</a></li>"
+						"</ul>"
+					"</div>"
+				"</div>"
+			"</section>";
+
+			$(".inne").append(channel_select_page);
+
+			}
+			else {
+			console.log("검색결과가 없습니다.");
+			}
+
+			} );
+			}
+
+
+			</script>
 
 
 

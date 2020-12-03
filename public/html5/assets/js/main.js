@@ -260,27 +260,107 @@
 			});
 
 
-// 검색기능 추가
-function search_channel(){
-var searchChannelName = document.getElementBYId("queary").value;
-var searchref = db.ref(value);
 
-firebase.database().ref('DB채널이름있는경로').startAt(searchChannelName).on("value",function(snapshot){
-if(snapshot.val()){
+
+
+
+
+
+
+			<script src="/__/firebase/8.1.1/firebase-app.js"></script>
+			<script src="/__/firebase/8.1.1/firebase-storage.js"></script>
+			<!-- Initialize Firebase -->
+			<script src="/__/firebase/init.js"></script>
+			<script src="../../openPopup.js"></script>
+
+					<script>
+					  // Your web app's Firebase configuration
+					  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+					  var firebaseConfig = {
+					    apiKey: "AIzaSyDwMYnkiXywcpwhC8OX0iQGHRwdZLnEm2o",
+					    authDomain: "webproject-f85df.firebaseapp.com",
+					    databaseURL: "https://webproject-f85df.firebaseio.com",
+					    projectId: "webproject-f85df",
+					    storageBucket: "webproject-f85df.appspot.com",
+					    messagingSenderId: "505722645824",
+					    appId: "1:505722645824:web:8edc2cb13f06ccf175dea5",
+					    measurementId: "G-HFWKZR7F96"
+					  };
+					  // Initialize Firebase
+						if (firebase.apps.length === 0) {
+					  firebase.initializeApp(firebaseConfig);
+					}
+					</script>
+					<script>
+					var storageRef = firebase.storage().ref();
+					var dataRef = firebase.database().ref();
+					var pathRef = storageRef.child('basketball_1.jpg');
+
+					function downImgURL(){pathRef.getDownloadURL().then(function(url){
+						var imgPath=url;
+						console.log(imgPath);
+					}).catch(function(error){
+						alert(error.message);
+					});
+
+					}
+				</script>
+
+// 검색기능 추가
+<script>
+function search_channel() {
+var searchChannelName = document.getElementBYId("query").value;
+document.getElementById("select_channl_name").textContent = "chName";
+// var searchref = db.ref(value);
+
+firebase.database().ref("testsearch").startAt(searchChannelName).on("value",function(snapshot){
+if(snapshot.val() ) {
 var chName = snapshot.key;
 var chVideoNum = snapshot.val().videonum;
 var chSubscribe = snapshot.val().subscribe;
+var chImg = snapshot.val().channel_img_ref;
+var chLink = snapshot.val().channel_ref;
 
+document.getElementById("select_channl_link").href = chLink ;
+document.getElementById("select_channl_video").img = chImg;
+document.getElementById("select_channl_name").textContent = "chName";
+document.getElementById("select_channl_videonum").textContent = "조회수 : "+ chVideoNum + " 구독자수 : "+ chSubscribe ;
+
+
+var channel_select_page =
+"<section>"
+	"<div class=\"\" style=\" margin-left:8%; height: 250px; position:relative; \">"
+
+		"<div class=\"image-container\" style=\"height: 210px; width: 280px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px\">"
+			"<a href="+ chLink + " class=\"test\"> <img src="+ chImg + "></img> </a>"
+		"</div>"
+		"<div style=\"height: 210px; width: 400px; left:280px; width:30%; position:absolute;margin:20px;\">"
+			"<a href="+ chLink + ">"
+				"<h2 style=\"margin-top:40px; margin-left:15px\">"+ chName + "</h2>"
+			"</a>"
+			"<p style=\"margin-left:15px\"> 구독자수: " +chSubscribe + " 영상수: "+ chVideoNum + "<br>"
+			"<a href=\"#\">채널주인스펙확인</a></p>"
+		"</div>"
+
+		"<div style=\"height: 210px; margin:20px; float:right; width:300px; width:20%\">"
+			"<ul class=\"actions\" style=\"margin-top:85px;\" >"
+				"<li><a href=\"#\" class=\"button\">구독</a></li>"
+			"</ul>"
+		"</div>"
+	"</div>"
+"</section>";
+
+$(".inne").append(channel_select_page);
 
 }
 else {
-
+console.log("검색결과가 없습니다.");
 }
 
-});
+} );
 }
 
-
+</scritp>
 
 
 
