@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>E-tube</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="html5/assets/css/main.css" />
+    <style>
+		ul, li{
+        list-style:none;
+        padding:0;
+        margin:0;
+			}
+		#liSearchOption {clear:both;}
+		#liSearchOption > div {
+				margin:0 auto;
+				margin-top: 30px;
+				width:auto;
+				height:100px;
+
+			}
+      body {margin: 10px;}
+.where {
+  display: block;
+  margin: 25px 15px;
+  font-size: 11px;
+  color: #000;
+  text-decoration: none;
+  font-family: verdana;
+  font-style: italic;
+}
+
+.filebox input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip:rect(0,0,0,0);
+  border: 0;
+}
+
+.filebox label {
+  display: inline-block;
+  padding: .5em .75em;
+  color: #999;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #fdfdfd;
+  cursor: pointer;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+}
+
+/* named upload */
+.filebox .upload-name {
+  display: inline-block;
+  padding: .5em .75em;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #f5f5f5;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* imaged preview */
+.filebox .upload-display {
+  margin-bottom: 5px;
+}
+
+@media(min-width: 768px) {
+  .filebox .upload-display {
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 0;
+  }
+}
+
+.filebox .upload-thumb-wrap {
+  display: inline-block;
+  width: 54px;
+  padding: 2px;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.filebox .upload-display img {
+  display: block;
+  max-width: 100%;
+  width: 100% \9;
+  height: auto;
+}
+
+.filebox.bs3-primary label {
+  color: #fff;
+  background-color: #F56A6A;
+  border-color: #F56A6A;
+}
+		</style>
+<script>
+function openWindowPop(url, name){
+    var options = 'top=200, left=500, width=250, height=120, status=no, menubar=no, toolbar=no, resizable=no, fullscreen=no, location=no';
+    window.open(url, name, options);
+}
+
+</script>
+
+<script>
+
+/*
+window.addEventListener("message", function(event){
+	if(event.data=="logined"){
+		alert("aesreajuie");
+		var loginBtn = document.getElementById("loginBtn");
+	  loginBtn.innerHTML = "로그아웃";
+	}
+});
+*/
+</script>
+
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+
+	<!-- Header -->
+<div class="inner">
+	<header id="header">
+		<a href="index.html" class="logo"><h1>E-tube</h1> </a>
+
+		<!-- Search -->
+		<section id="search" class="alt">
+			<form method="post" action="channel_select.html">
+				<input type="text" onkeypress="if(event.keyCode == 13){search_channel();}"name="query" id="query" placeholder="Search" />
+			</form>
+		</section>
+
+		<ul class="icons">
+			<li><a href="mychannel.html" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449">사용자이름</span></a></li>
+		</ul>
+
+	</header>
+
+    <section>
+			<!--업로드?
+      <div class="filebox bs3-primary preview-image">
+        <input class="upload-name" value="영상파일선택" disabled="disabled"  >
+        <label for="input_file">업로드</label>
+        <input type="file" id ="input-file" class="upload-hidden" name="upfile[]" multiple>
+      </div>
+      <div class="filebox bs3-primary preview-image">
+        <input class="upload-name" value="이미지파일선택" disabled="disabled" >
+        <label for="input_file">업로드</label>
+        <input type="file" id ="input-file" class="upload-hidden">
+      </div>
+		-->
+      <div class="textbox">
+        <label><h3>제목</h3></label>
+        <input type="text" id="ex_input">
+      </div>
+      <div style=" margin-top:55px;">
+          <label><h3>재생목록</h3></label>
+      <li id='liSearchOption'>
+          <div >
+              <select id='selSearchOption' >
+                  <option value='A'>재생목록1</option>
+                  <option value='T'>재생목록2</option>
+                  <option value='C'>재생목록3</option>
+              </select>
+
+          </div>
+      </li>
+      </div>
+      <div>
+        <label><h3>카테고리</h3></label>
+      <li id='liSearchOption'>
+          <div >
+              <select id='selSearchOption' >
+                  <option value='A'>스포츠</option>
+                  <option value='T'>음악</option>
+                  <option value='T'>생활</option>
+                  <option value='T'>컴퓨터</option>
+                  <option value='C'>게임</option>
+              </select>
+
+          </div>
+      </li>
+      </div>
+			<!--업로드 모르겠음
+      <div class="filebox bs3-primary preview-image">
+        <input class="upload-name" value="강의자료파일선택" disabled="disabled" >
+        <label for="input_file">업로드</label>
+        <input type="file" id ="input-file" class="upload-hidden">
+      </div>
+		-->
+    </section>
+      </div></div>
+      <div id="sidebar">
+      <div class="inner">
+
+
+      <!-- Menu -->
+        <nav id="menu">
+          <header class="major">
+            <h2 ><div class="image-container" style="height: 120px; width: 160px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px">
+              <a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU"></img> </a>
+            </div><br>
+          채널 이름</h2>
+          </header>
+          <ul>
+            <li><a href="index.html">동영상 업로드</a></li>
+            <li><a href="index.html">동영상 삭제</a></li>
+            <li><a href="index.html">재생목록 생성 및 삭제 </a></li>
+            <li><a href="index.html">로그아웃</a></li>
+
+          </ul>
+        </nav>
+
+
+      </div>
+      </div>
+
+      </div>
+
+
+
+
+
+      <!-- Scripts 아직뭔지 모르겠음-->
+      <script src="html5/assets/js/jquery_main.js"></script>
+      <script src="html5/assets/js/browser_main.js"></script>
+      <script src="html5/assets/js/breakpoints_main.js"></script>
+      <script src="html5/assets/js/util.js"></script>
+      <script src="html5/assets/js/main.js"></script>
+
+      </body>
+      </html>
