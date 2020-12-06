@@ -1,0 +1,77 @@
+<!DOCTYPE html></<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+    <script src="firebase.js?useEmulator=true"></script>
+    <script>
+    function initApp() {
+      // Listening for auth state changes.
+      firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            console.log("로그인 상태");
+          } else {
+              console.log("로그아웃 상태");
+
+        }
+
+      });
+}
+    window.onload = function() {
+    initApp();
+};
+    function db(){
+      var user = firebase.auth().currentUser;
+      if (user != null) {
+        name = user.displayName;
+        email = user.email;
+        photoUrl = user.photoURL;
+        emailVerified = user.emailVerified;
+        uid = user.uid;
+      }else{
+        console.log("먼가 문제가잇ㅇ므");
+      }
+      var testRef = firebase.database().ref('test/'+uid);
+      //var userId = firebase.auth().currentUser.uid;
+      var d = new Date();
+      var date = d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate() + "/" + d.getHours() + "/" + d.getMinutes();
+      var time=date+ "/" + d.getSeconds();
+      var storage = firebase.storage();
+      var storageRef = storage.ref();
+      var imagesRef = storageRef.child(uid+"/"+time+".jpg");
+      var selectedFile = document.getElementById('input').files[0];
+      var uploadTask = imagesRef.put(selectedFile);
+      var imgpath;
+      uploadTask.on('state_changed', function(snapshot){
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+        case firebase.storage.TaskState.PAUSED: // or 'paused'
+        console.log('Upload is paused');
+        break;
+        case firebase.storage.TaskState.RUNNING: // or 'running'
+        console.log('Upload is running');
+        break;
+        }
+      }, function(error){
+
+      }, function(){
+        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        console.log('File available at', downloadURL);
+        testRef.child("channel_info").push({"name":"aa", "date": date, "imgpath": downloadURL});
+        });
+      });
+    }
+    </script>
+
+  </head>
+  <body>
+    <button onclick="db()">디비 등록</button>
+    <br>
+    <input type="file" id="input">
+  </body>
+</html>

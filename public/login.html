@@ -7,12 +7,27 @@
 <script>
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
+  var user = firebase.auth().currentUser;
+var name, email, photoUrl, uid, emailVerified;
+
+if (user != null) {
+  name = user.displayName;
+  email = user.email;
+  photoUrl = user.photoURL;
+  emailVerified = user.emailVerified;
+  uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+                   // this value to authenticate with your backend server, if
+                   // you have one. Use User.getToken() instead.
+                   console.log(uid);
+                   var testRef = firebase.database().ref('test/');
+                   testRef.child(uid).set({"id": uid, "name":profile.getName(), "email":profile.getEmail()});
+}else{
+  console.log("먼가 문제가잇ㅇ므");
+}
   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
   console.log('Name: ' + profile.getName());
   console.log('Image URL: ' + profile.getImageUrl());
   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-  var testRef = firebase.database().ref('test/');
-  testRef.child(profile.getId()).set({"id":profile.getId(), "name":profile.getName(), "email":profile.getEmail()});
 }
 </script>
 </head>
@@ -47,7 +62,7 @@ function onSignIn(googleUser) {
 <script src="/__/firebase/8.1.1/firebase-analytics.js"></script>
 
 <!-- Initialize Firebase -->
-<script src="/__/firebase/init.js"></script>
+<script src="/__/firebase/init.js?useEmulator=true"></script>
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
 
@@ -61,26 +76,20 @@ function onSignIn(googleUser) {
 var logoutBtn =  document.getElementById("logoutBtn");
 var googlelogin = document.getElementById("googlelogin");
    googlelogin.onclick = function(){
-     var provider = new firebase.auth.GoogleAuthProvider();
-     provider.setCustomParameters({
-  prompt: 'select_account'
-});
-     firebase.auth().signInWithPopup(provider).then(function(result) {
-  // This gives you a Google Access Token. You can use it to access the Google API.
-  var token = result.credential.accessToken;
-  // The signed-in user info.
-  var user = result.user;
-  // ...
-}).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  // The email of the user's account used.
-  var email = error.email;
-  // The firebase.auth.AuthCredential type that was used.
-  var credential = error.credential;
-  // ...
-});
+     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(()=>{
+        var provider = new firebase.auth.GoogleAuthProvider();
+         firebase.auth().onAuthStateChanged(function(user){
+         if(user){
+         }else{
+           firebase.auth().signInWithPopup(provider).then(function(result) {
+               firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+            }).catch(function(error) {
+
+                });
+               }
+         });
+     })
+
    }
 
 
@@ -93,17 +102,17 @@ var googlelogin = document.getElementById("googlelogin");
 });
    }
 
-
- firebase.auth().onAuthStateChanged(function(user){
+   firebase.auth().onAuthStateChanged(function(user){
    if(user){
+     console.log("로그인상태");
      googlelogin.style.display="none";
      logoutBtn.style.display="block";
    }else{
-     console.log("로그아웃됨");
+     console.log("로그아웃상태");
      googlelogin.style.display="block";
      logoutBtn.style.display="none";
-   }
- });
+         }
+   });
 
 </script>
 

@@ -1,8 +1,3 @@
-/*
-	Editorial by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
 
 (function($) {
 
@@ -262,14 +257,13 @@
 
 
 
-
+/*
 
 
 
 
 			<script src="/__/firebase/8.1.1/firebase-app.js"></script>
 			<script src="/__/firebase/8.1.1/firebase-storage.js"></script>
-			<!-- Initialize Firebase -->
 			<script src="/__/firebase/init.js"></script>
 			<script src="../../openPopup.js"></script>
 
@@ -360,8 +354,8 @@ console.log("검색결과가 없습니다.");
 } );
 }
 
-</scritp>
-
+</script>
+*/
 
 
 })(jQuery);
