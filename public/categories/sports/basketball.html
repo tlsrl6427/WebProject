@@ -43,6 +43,7 @@ function createDiv(testid, name){
 
 		var newImg = document.createElement("img");
 		newImg.setAttribute("id", testid+"_img");
+		newImg.setAttribute("onload", "resize(this)");
 		newImg.style.display="block";
 		document.getElementById(testid+"_a").appendChild(newImg);
 
@@ -53,7 +54,33 @@ function createDiv(testid, name){
 		document.getElementById(testid+"_out").appendChild(newDIVname);
 }
 
+function resize(img){
 
+   var width = img.width;
+   var height = img.height;
+
+   var maxWidth = 160;
+   var maxHeight = 200;
+
+   if(width > maxWidth || height > maxHeight){
+
+      if(width > height){
+         resizeWidth = maxWidth;
+         resizeHeight = (height * resizeWidth) / width;
+
+      }else{
+         resizeHeight = maxHeight;
+         resizeWidth = (width * resizeHeight) / height;
+      }
+
+   }else{
+      resizeWidth = width;
+      resizeHeight = height;
+   }
+
+   img.width = resizeWidth;
+   img.height = resizeHeight;
+}
 
 function initApp(){
 	// Listening for auth state changes.
@@ -67,7 +94,7 @@ function initApp(){
 				photoUrl = user.photoURL;
 				emailVerified = user.emailVerified;
 				uid = user.uid;
-				var dataRef = firebase.database().ref('/test/'+uid+"/channel_info");
+				var dataRef = firebase.database().ref('/channel_List');
 				dataRef.once('value', (snapshot)=>{
 					snapshot.forEach((childSnapshot) => {
 					var childKey = childSnapshot.key;
@@ -162,7 +189,27 @@ if (user != null) {
 		</section>
 
 		<ul class="icons">
-		<li><a href="javascript:openWindowPop('../../login.html', 'popup');" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449"> 로그인</span></a></li>
+		<li><a href="javascript:openWindowPop('../../login.html', 'popup');" class="fa fa-user-circle fa-lg">
+			<span class="label" style="color:#3D4449">
+				<a id="logURL" href="javascript:openWindowPop('../../login.html', 'popup');">
+					로그인
+				</a>
+			</span>
+			<script>
+			switch (localStorage.getItem("logined")) {
+				case 'logined':
+					document.getElementById("logURL").innerHTML="마이페이지";
+					document.getElementById("logURL").setAttribute('href', '../../mychannel.html');
+					break;
+				case '':
+					document.getElementById("logURL").innerHTML="로그인";
+					document.getElementById("logURL").setAttribute('href', "javascript:openWindowPop('../../login.html', 'popup');");
+					break;
+				default:
+
+			}
+			</script>
+		</a></li>
 		</ul>
 
 	</header>

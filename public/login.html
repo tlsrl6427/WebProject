@@ -19,8 +19,8 @@ if (user != null) {
                    // this value to authenticate with your backend server, if
                    // you have one. Use User.getToken() instead.
                    console.log(uid);
-                   var testRef = firebase.database().ref('test/');
-                   testRef.child(uid).set({"id": uid, "name":profile.getName(), "email":profile.getEmail()});
+                   var infoRef = firebase.database().ref('userInfo/'+uid+'/');
+                   infoRef.child("info").set({"id": uid, "name":profile.getName(), "email":profile.getEmail()});
 }else{
   console.log("먼가 문제가잇ㅇ므");
 }

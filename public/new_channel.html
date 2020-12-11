@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
-    <script src="firebase.js?useEmulator=true"></script>
+    <script src="googlelogin.js?useEmulator=true"></script>
     <script>
     function initApp() {
       // Listening for auth state changes.
@@ -39,12 +39,13 @@
       var channelRef_list = firebase.database().ref('channel_List/');
       //var userId = firebase.auth().currentUser.uid;
       var d = new Date();
-      var date = d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate() + "/" + d.getHours() + "/" + d.getMinutes();
-      var time=date+ "/" + d.getSeconds();
+      var date = d.getFullYear() + "_" + d.getMonth() + "_" + d.getDate() + "_" + d.getHours() + "_" + d.getMinutes();
+      var time=date+ "_" + d.getSeconds();
       var storage = firebase.storage();
       var storageRef = storage.ref();
       var imagesRef = storageRef.child(uid+"/"+time+".jpg");
       var selectedFile = document.getElementById('input').files[0];
+      var channel_name = document.getElementById('channel_name').value;
       var uploadTask = imagesRef.put(selectedFile);
       var imgpath;
       uploadTask.on('state_changed', function(snapshot){
@@ -63,8 +64,8 @@
       }, function(){
         uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
         console.log('File available at', downloadURL);
-        channelRef_user.child("channel_info").push({"name":"aa", "date": date, "imgpath": downloadURL});
-        channelRef_list.push({"name":"aa", "date": date, "imgpath": downloadURL, "user": uid});
+        channelRef_user.child("channel_info").push({"name":channel_name, "date": date, "imgpath": downloadURL});
+        channelRef_list.push({"name":channel_name, "date": date, "imgpath": downloadURL, "user": uid});
         });
       });
     }
@@ -72,12 +73,9 @@
 
   </head>
   <body>
-    <button onclick="db()">디비 등록</button>
     <br>
-    <input type="file" id="input">
-    <form>
-      채널 이름 : <input type='text'/><br>
-      <input type="file" id="input"/>
-    </form>
+      채널 이름 : <input type='text' id="channel_name"/><br>
+      채널 로고: <input type="file" id="input"/><br>
+    <button onclick="db()">디비 등록</button>
   </body>
 </html>

@@ -47,7 +47,28 @@ window.addEventListener("message", function(event){
 		</section>
 
 		<ul class="icons">
-			<li><a href="mychannel.html" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449">사용자이름</span></a></li>
+			<li><a href="javascript:openWindowPop('login.html', 'popup');" class="fa fa-user-circle fa-lg">
+				<span class="label" style="color:#3D4449">
+					<a id="logURL" href="javascript:openWindowPop('login.html', 'popup');">
+						로그인
+					</a>
+				</span>
+			</a>
+			<script>
+			switch (localStorage.getItem("logined")) {
+				case 'logined':
+					document.getElementById("logURL").innerHTML="마이페이지";
+					document.getElementById("logURL").setAttribute('href', 'mychannel.html');
+					break;
+				case '':
+					document.getElementById("logURL").innerHTML="로그인";
+					document.getElementById("logURL").setAttribute('href', "javascript:openWindowPop('login.html', 'popup');");
+					break;
+				default:
+
+			}
+			</script>
+		</li>
 		</ul>
 
 	</header>
@@ -61,7 +82,7 @@ window.addEventListener("message", function(event){
     </header>
 				<div style="margin-left:40%" >
 					<ul class="actions"  >
-						<li><a href="#" class="button">+새 채널 생성</a></li>
+						<li><a href="new_channel.html" class="button">+새 채널 생성</a></li>
 					</ul>
 				</div>
 	</section>
@@ -89,7 +110,7 @@ window.addEventListener("message", function(event){
     </div>
   </section>
   <section>
-    <div class="" style=" margin:0 auto%; height: 250px; position:relative; ">
+    <div class="" style=" margin:0 auto; height: 250px; position:relative; ">
 
   <!-- Section -->
 
@@ -128,10 +149,10 @@ window.addEventListener("message", function(event){
       <h2>Menu</h2>
     </header>
     <ul>
-      <li><a href="index.html">내 채널 관리</a></li>
-      <li><a href="index.html">구독 채널 관리</a></li>
+      <li><a href="mychannel.html">내 채널 관리</a></li>
+      <li><a href="subscribed_channel.html">구독 채널 관리</a></li>
       <li><a href="index.html">내 스팩 관리</a></li>
-      <li><a href="index.html">로그아웃</a></li>
+      <li><a href="javascript:openWindowPop('login.html', 'popup');">로그아웃</a></li>
 
     </ul>
   </nav>
