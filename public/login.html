@@ -83,6 +83,8 @@ var googlelogin = document.getElementById("googlelogin");
          }else{
            firebase.auth().signInWithPopup(provider).then(function(result) {
                firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+               opener.parent.location.reload();
+               window.close();
             }).catch(function(error) {
 
                 });
@@ -97,6 +99,8 @@ var googlelogin = document.getElementById("googlelogin");
      firebase.auth().signOut().then(function() {
        alert("로그아웃되었습니다");
   // Sign-out successful.
+  opener.parent.location.reload();
+  window.close();
 }).catch(function(error) {
   // An error happened.
 });
@@ -107,10 +111,14 @@ var googlelogin = document.getElementById("googlelogin");
      console.log("로그인상태");
      googlelogin.style.display="none";
      logoutBtn.style.display="block";
+     localStorage.setItem("logined","logined");
+     localStorage.setItem("logouted",null);
    }else{
      console.log("로그아웃상태");
      googlelogin.style.display="block";
      logoutBtn.style.display="none";
+     localStorage.setItem("logined",null);
+     localStorage.setItem("logouted","logouted");
          }
    });
 
