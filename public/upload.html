@@ -109,26 +109,101 @@
   border-color: #F56A6A;
 }
 		</style>
-<script>
-function openWindowPop(url, name){
-    var options = 'top=200, left=500, width=250, height=120, status=no, menubar=no, toolbar=no, resizable=no, fullscreen=no, location=no';
-    window.open(url, name, options);
-}
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+		<script src="googlelogin.js?useEmulator=true"></script>
+		<script>
 
-</script>
+		function db(){
 
-<script>
+			firebase.auth().onAuthStateChanged(function(user) {
+					if (user) {
 
-/*
-window.addEventListener("message", function(event){
-	if(event.data=="logined"){
-		alert("aesreajuie");
-		var loginBtn = document.getElementById("loginBtn");
-	  loginBtn.innerHTML = "로그아웃";
+			var user = firebase.auth().currentUser;
+			if (user != null) {
+				name = user.displayName;
+				email = user.email;
+				photoUrl = user.photoURL;
+				emailVerified = user.emailVerified;
+				uid = user.uid;
+			}else{
+				console.log("먼가 문제가잇ㅇ므");
+			}
+			temp = location.href.split("?");
+			channel_name = temp[1];
+
+			var channelRef_user = firebase.database().ref('userInfo/'+uid+"/channel_info/");
+			var channelRef_list = firebase.database().ref('channel_List/');
+
+			//이름짓기
+			var d = new Date();
+			var date = d.getFullYear() + "_" + d.getMonth() + "_" + d.getDate() + "_" + d.getHours() + "_" + d.getMinutes();
+			var time=date+ "_" + d.getSeconds();
+			var storage = firebase.storage();
+			var storageRef = storage.ref();
+			var imagesRef = storageRef.child(uid+"/video_"+time+".mp4");
+
+			//경로
+			var selectedFile = document.getElementById('input').files[0];
+			var uploadTask = imagesRef.put(selectedFile);
+			var imgpath;
+
+			//업로드
+			channelRef_user.once('value', (snapshot)=>{
+
+				snapshot.forEach((childSnapshot1) => {
+				var childKey1 = childSnapshot1.key;
+				var childData1 = childSnapshot1.val();
+
+				if(childData1.name == channel_name){
+
+					uploadTask.on('state_changed',function(){
+
+						uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+						channelRef_user.child(childKey1).child("video_info").push({"name":channel_name, "time": time, "videopath": downloadURL});
+
+
+						channelRef_list.once('value', (snapshot)=>{
+
+							snapshot.forEach((childSnapshot2) => {
+							var childKey2 = childSnapshot2.key;
+							var childData2 = childSnapshot2.val();
+
+							if(childData2.name == channel_name){
+							channelRef_list.child(childKey2).child("video_info").push({"name":channel_name, "time": time, "videopath": downloadURL, "user": uid});
+
+						}
+						});
+
+					});
+
+
+
+						});
+
+					}, function(error){
+					});
+
+				}
+
+				});
+
+			});
+
+
+
+
+
+	}else{
+		console.log("로그아웃 상태");
 	}
-});
-*/
-</script>
+
+
+	});
+}
+		</script>
 
 	</head>
 	<body class="is-preload">
@@ -158,18 +233,7 @@ window.addEventListener("message", function(event){
 	</header>
 
     <section>
-			<!--업로드?
-      <div class="filebox bs3-primary preview-image">
-        <input class="upload-name" value="영상파일선택" disabled="disabled"  >
-        <label for="input_file">업로드</label>
-        <input type="file" id ="input-file" class="upload-hidden" name="upfile[]" multiple>
-      </div>
-      <div class="filebox bs3-primary preview-image">
-        <input class="upload-name" value="이미지파일선택" disabled="disabled" >
-        <label for="input_file">업로드</label>
-        <input type="file" id ="input-file" class="upload-hidden">
-      </div>
-		-->
+
       <div class="textbox">
         <label><h3>제목</h3></label>
         <input type="text" id="ex_input">
@@ -202,13 +266,10 @@ window.addEventListener("message", function(event){
           </div>
       </li>
       </div>
-			<!--업로드 모르겠음
-      <div class="filebox bs3-primary preview-image">
-        <input class="upload-name" value="강의자료파일선택" disabled="disabled" >
-        <label for="input_file">업로드</label>
-        <input type="file" id ="input-file" class="upload-hidden">
-      </div>
-		-->
+
+			찾아보기: <input type="file" id="input"/><br>
+			<button onclick="db();" >디비 등록</button>
+
     </section>
       </div></div>
       <div id="sidebar">

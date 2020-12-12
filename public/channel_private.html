@@ -81,6 +81,11 @@
 					var h2 = document.getElementById("h2_1");
 					h2.innerHTML=childData.name;
 
+					var a1 = document.getElementById("a1");
+					a1.setAttribute("href", "upload.html?"+childData.name);
+					a1.innerHTML="영상 업로드";
+				}else{
+					
 				}
 
 				});
@@ -94,6 +99,10 @@
 
 		});
 
+		}
+
+		function goodok(){
+			alert("구독되었습니다.");
 		}
 
 		window.onload=function(){
@@ -122,7 +131,25 @@
 		</section>
 
 		<ul class="icons">
-			<li><a href="login.html" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449"> 로그인</span></a></li>
+			<li>
+				<a id="logURL" href="" class="fa fa-user-circle fa-lg">
+				<span class="label" style="color:#3D4449">로그인</span>
+				<script>
+				switch (localStorage.getItem("logined")) {
+					case 'logined':
+						document.getElementById("logURL").innerHTML="마이페이지";
+						document.getElementById("logURL").setAttribute('href', 'mychannel.html');
+						break;
+					case '':
+						document.getElementById("logURL").innerHTML="로그인";
+						document.getElementById("logURL").setAttribute('href', "javascript:openWindowPop('login.html', 'popup');");
+						break;
+					default:
+
+				}
+				</script>
+				</a>
+		</li>
 		</ul>
 
 	</header>
@@ -137,8 +164,8 @@
                   <a href="#" class="test"> <img id="img1" src="#" onload=resize(this)></img> </a>
                 </div>
               	<div style="height: 120px; width: 400px; left:160px; width:30%; position:absolute;margin:20px;">
-								  <a href="channel_private.html">
-										<h2 id="h2_1"style="margin-top:5px; margin-left:15px"></h2>
+								  <a href="#" onclick="goodok();">
+										<h2 id="h2_1"style="margin-top:5px; margin-left:15px">구독</h2>
 									</a>
 										<p style="margin-left:15px">구독자수, 영상수<br>
 										<a href="#">채널주인스펙확인</a></p>
@@ -147,7 +174,7 @@
 
                 <div style="height: 120px; width: 100px; float:right;margin:20px;">
                   <ul class="actions" style="margin-top:40px;" >
-                    <li><a href="#" class="button">구독</a></li>
+                    <li><a id="a1" href="" class="button">-</a></li>
                   </ul>
                 </div>
 
