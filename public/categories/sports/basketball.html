@@ -36,7 +36,7 @@ function createDiv(testid, name){
 		document.getElementById(testid+"_out").appendChild(newDIVimg);
 
 		var newA = document.createElement("a");
-		newA.setAttribute("href", "#");
+		newA.setAttribute("href", "../../channel_private.html?"+name);
 		newA.setAttribute("id", testid+"_a");
 		newA.setAttribute("class", "test");
 		document.getElementById(testid+"_in").appendChild(newA);

@@ -6,23 +6,246 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="html5/assets/css/main.css" />
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+		<script src="googlelogin.js?useEmulator=true"></script>
+		<script src="openPopup.js"></script>
 <script>
 function openWindowPop(url, name){
     var options = 'top=200, left=500, width=250, height=120, status=no, menubar=no, toolbar=no, resizable=no, fullscreen=no, location=no';
     window.open(url, name, options);
 }
-</script>
 
-<script>
-/*
-window.addEventListener("message", function(event){
-	if(event.data=="logined"){
-		alert("aesreajuie");
-		var loginBtn = document.getElementById("loginBtn");
-	  loginBtn.innerHTML = "로그아웃";
-	}
+function resize(img){
+
+   var width = img.width;
+   var height = img.height;
+
+   var maxWidth = 240;
+   var maxHeight = 180;
+
+   if(width > maxWidth || height > maxHeight){
+
+      if(width > height){
+         resizeWidth = maxWidth;
+         resizeHeight = (height * resizeWidth) / width;
+
+      }else{
+         resizeHeight = maxHeight;
+         resizeWidth = (width * resizeHeight) / height;
+      }
+
+   }else{
+      resizeWidth = width;
+      resizeHeight = height;
+   }
+
+   img.width = resizeWidth;
+   img.height = resizeHeight;
+}
+
+function initApp(){
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				var id = "test";
+				var idnum =1;
+				console.log("로그인 상태");
+				name = user.displayName;
+				email = user.email;
+				photoUrl = user.photoURL;
+				emailVerified = user.emailVerified;
+				uid = user.uid;
+				var dataRef = firebase.database().ref('/userInfo/'+uid+"/channel_info");
+				dataRef.once('value', (snapshot)=>{
+
+					snapshot.forEach((childSnapshot) => {
+					var childKey = childSnapshot.key;
+     			var childData = childSnapshot.val();
+
+					createDiv(id+idnum, childData.name);
+					url = childData.imgpath;
+					var img = document.getElementById(id+idnum+"_img1");
+					img.src = url;
+					var a = document.getElementById(id+idnum+"_a2");
+					a.setAttribute("href", "channel_private.html?"+childData.name);
+					console.log(childData.name+" "+id+idnum);
+					idnum++;
+					});
+
+				});
+
+			}else{
+				console.log("로그아웃 상태");
+			}
+		});
+}
+
+function deletebtn(channel_name){
+	var confirmed = confirm("정말 삭제하시겠습니까?");
+	if(confirmed){
+		var dataRef = firebase.database().ref('/userInfo/'+uid+"/channel_info");
+		dataRef.once('value', (snapshot)=>{
+
+			snapshot.forEach((childSnapshot) => {
+			var childKey = childSnapshot.key;
+			var childData = childSnapshot.val();
+
+			if(childData.name==channel_name){
+				dataRef.child(childKey).remove();
+
+				var storage = firebase.storage();
+	      var storageRef = storage.ref();
+	      var imagesRef = storageRef.child(uid+"/"+childData.time+".jpg");
+				console.log(uid+"/"+childData.time+".jpg");
+				imagesRef.delete().then(function(){
+					console.log("스토리지 삭제 완료");
+				}).catch(function(error){
+					console.log("에러있음");
+				});
+
+			}
+
+		});
+
+	});
+
+	var dataRef2 = firebase.database().ref('/channel_List');
+	dataRef2.once('value', (snapshot)=>{
+
+		snapshot.forEach((childSnapshot) => {
+		var childKey = childSnapshot.key;
+		var childData = childSnapshot.val();
+
+		if(childData.name==channel_name){
+			dataRef2.child(childKey).remove();
+			location.reload();
+		}
+
+	});
+
 });
-*/
+
+	}else{
+
+	}
+
+
+
+}
+
+function createDiv(testid, channel_name){
+	var newSEC = document.createElement("section");
+	newSEC.setAttribute("id",testid+"+sec");
+	document.getElementById("sec").appendChild(newSEC);
+
+	//        DIV1--------------------------------------------------
+	var newDIV1 = document.createElement("div");
+	newDIV1.style.position="relative";
+	newDIV1.setAttribute("id", testid+"_div1");
+	newDIV1.style.height="250px";
+	newDIV1.setAttribute("class"," ");
+	newDIV1.style.margin="0 auto";
+	document.getElementById(testid+"+sec").appendChild(newDIV1);
+
+	//        DIV2-------------------------------------------------
+	var newDIV2 = document.createElement("div");
+	newDIV2.setAttribute("class","image-container");
+	newDIV2.setAttribute("id", testid+"_div2");
+	newDIV2.style.height="180px";
+	newDIV2.style.width="240px";
+	newDIV2.style.float="left";
+	newDIV2.style.overflow="hidden";
+	newDIV2.style.display="flex";
+	newDIV2.style.alignItems="center";
+	newDIV2.style.justifyContent="center";
+	newDIV2.style.margin="20px";
+	document.getElementById(testid+"_div1").appendChild(newDIV2);
+
+	var newA1 = document.createElement("a");
+	newA1.setAttribute("href", "#");
+	newA1.setAttribute("id", testid+"_a1");
+	newA1.setAttribute("class", "test");
+	document.getElementById(testid+"_div2").appendChild(newA1);
+
+	var newImg1 = document.createElement("img");
+	newImg1.setAttribute("id", testid+"_img1");
+	newImg1.setAttribute("onload", "resize(this)");
+	newImg1.style.display="block";
+	document.getElementById(testid+"_a1").appendChild(newImg1);
+
+	//        DIV3-------------------------------------------------
+	var newDIV3 = document.createElement("div");
+	newDIV3.setAttribute("id", testid+"_div3");
+	newDIV3.style.height="240px";
+	newDIV3.style.width="400px";
+	newDIV3.style.left="240px";
+	newDIV3.style.width="30%";
+	newDIV3.style.position="absolute";
+	newDIV3.style.margin="20px";
+	document.getElementById(testid+"_div1").appendChild(newDIV3);
+
+	var newA2 = document.createElement("a");
+	newA2.setAttribute("href", "channel_private.html");
+	newA2.setAttribute("id", testid+"_a2");
+	document.getElementById(testid+"_div3").appendChild(newA2);
+
+	var newH2 = document.createElement("h2");
+	newH2.setAttribute("id", testid+"_h2");
+	newH2.style.marginTop="20px";
+	newH2.style.marginLeft="15px";
+	newH2.innerHTML = channel_name;
+	document.getElementById(testid+"_a2").appendChild(newH2);
+
+	var newP1 = document.createElement("p");
+	newP1.setAttribute("id", testid+"_p1");
+	newP1.style.marginLeft="15px";
+	newP1.innerHTML="구독자수, 영상수";
+	document.getElementById(testid+"_div3").appendChild(newP1);
+
+	//        DIV4-------------------------------------------------
+	var newDIV4 = document.createElement("div");
+	newDIV4.setAttribute("id", testid+"_div4");
+	newDIV4.style.height="240px";
+	newDIV4.style.width="300px";
+	newDIV4.style.width="20%";
+	newDIV4.style.margin="10px";
+	newDIV4.style.float="right";
+	document.getElementById(testid+"_div1").appendChild(newDIV4);
+
+	var newUL1 = document.createElement("ul");
+	newUL1.setAttribute("class", "actions");
+	newUL1.setAttribute("id", testid+"_ul1");
+	newUL1.style.marginTop="85px";
+	document.getElementById(testid+"_div4").appendChild(newUL1);
+
+	var newLI1 = document.createElement("li");
+	newLI1.setAttribute("id", testid+"_li1");
+	document.getElementById(testid+"_ul1").appendChild(newLI1);
+
+	var newA2 = document.createElement("a");
+	newA2.setAttribute("href", "#");
+	newA2.setAttribute("id", testid+"_a2");
+	newA2.setAttribute("class", "button");
+	newA2.innerHTML = "관리";
+	document.getElementById(testid+"_li1").appendChild(newA2);
+
+	var newLI2 = document.createElement("li");
+	newLI2.setAttribute("id", testid+"_li2");
+	document.getElementById(testid+"_ul1").appendChild(newLI2);
+
+	var newA3 = document.createElement("a");
+	newA3.setAttribute("id", testid+"_a3");
+	newA3.setAttribute("class", "button");
+	newA3.onclick=function(){deletebtn(channel_name);}
+	newA3.innerHTML = "삭제";
+	document.getElementById(testid+"_li2").appendChild(newA3);
+}
+
+window.onload=function(){
+	initApp();
+}
 </script>
 
 	</head>
@@ -35,103 +258,60 @@ window.addEventListener("message", function(event){
 					<div id="main">
 
 	<!-- Header -->
-<div class="inner">
-	<header id="header">
-		<a href="index.html" class="logo"><h1>E-tube</h1> </a>
+						<div class="inner">
+							<header id="header">
+								<a href="index.html" class="logo"><h1>E-tube</h1> </a>
 
 		<!-- Search -->
-		<section id="search" class="alt">
-			<form method="post" action="channel_select.html">
-				<input type="text" onkeypress="if(event.keyCode == 13){search_channel();}"name="query" id="query" placeholder="Search" />
-			</form>
-		</section>
+									<section id="search" class="alt">
+											<form method="post" action="channel_select.html">
+											<input type="text" onkeypress="if(event.keyCode == 13){search_channel();}"name="query" id="query" placeholder="Search" />
+											</form>
+									</section>
 
-		<ul class="icons">
-			<li><a href="javascript:openWindowPop('login.html', 'popup');" class="fa fa-user-circle fa-lg">
-				<span class="label" style="color:#3D4449">
-					<a id="logURL" href="javascript:openWindowPop('login.html', 'popup');">
-						로그인
-					</a>
-				</span>
-			</a>
-			<script>
-			switch (localStorage.getItem("logined")) {
-				case 'logined':
-					document.getElementById("logURL").innerHTML="마이페이지";
-					document.getElementById("logURL").setAttribute('href', 'mychannel.html');
-					break;
-				case '':
-					document.getElementById("logURL").innerHTML="로그인";
-					document.getElementById("logURL").setAttribute('href', "javascript:openWindowPop('login.html', 'popup');");
-					break;
-				default:
+									<ul class="icons">
+									<li>
+										<a href="javascript:openWindowPop('login.html', 'popup');" class="fa fa-user-circle fa-lg">
+											<span class="label" style="color:#3D4449">
+												<a id="logURL" href="javascript:openWindowPop('login.html', 'popup');">
+													로그인
+												</a>
+											</span>
+										</a>
+												<script>
+													switch (localStorage.getItem("logined")) {
+														case 'logined':
+																document.getElementById("logURL").innerHTML="마이페이지";
+																document.getElementById("logURL").setAttribute('href', 'mychannel.html');
+																			break;
+														case '':
+																document.getElementById("logURL").innerHTML="로그인";
+																document.getElementById("logURL").setAttribute('href', "javascript:openWindowPop('login.html', 'popup');");
+																			break;
+																	default:
 
-			}
-			</script>
-		</li>
-		</ul>
+														}
+												</script>
+								</li>
+								</ul>
 
-	</header>
+								</header>
 
-  <div id="main">
-    <div class="inner">
+  							<div id="main">
+  							  <div id="sec" class="inner">
 
-  <section>
-    <header class="major">
-      <h2>내 채널 관리</h2>
-    </header>
-				<div style="margin-left:40%" >
-					<ul class="actions"  >
-						<li><a href="new_channel.html" class="button">+새 채널 생성</a></li>
-					</ul>
-				</div>
-	</section>
-	<section>
-    <div class="" style=" margin:0 auto; height: 250px; position:relative; ">
+  										<section>
+  								 			 <header class="major">
+      											<h2>내 채널 관리</h2>
+  										  </header>
+												<div style="margin-left:40%" >
+													<ul class="actions"  >
+														<li><a href="new_channel.html" class="button">+새 채널 생성</a></li>
+													</ul>
+												</div>
+											</section>
 
-  <!-- Section -->
 
-      <div class="image-container" style="height: 180px; width: 240px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px">
-        <a href="#" class="test"> <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg"></img> </a>
-      </div>
-      <div style="height: 240px; width: 400px; left:240px; width:30%; position:absolute;margin:20px;">
-        <a href="channel_private.html">
-          <h2 style="margin-top:20px; margin-left:15px">고양이채널</h2>
-        </a>
-        <p style="margin-left:15px">구독자수, 영상수</p>
-      </div>
-
-      <div style="height: 240px; margin:10px; float:right; width:300px; width:20%">
-        <ul class="actions" style="margin-top:85px;" >
-          <li><a href="#" class="button" >관리</a></li>
-          <li><a href="#" class="button">삭제</a></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-  <section>
-    <div class="" style=" margin:0 auto; height: 250px; position:relative; ">
-
-  <!-- Section -->
-
-      <div class="image-container" style="height: 180px; width: 240px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px">
-        <a href="#" class="test"> <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg"></img> </a>
-      </div>
-      <div style="height: 240px; width: 400px; left:240px; width:30%; position:absolute;margin:20px;">
-        <a href="channel_private.html">
-          <h2 style="margin-top:20px; margin-left:15px">고양이채널</h2>
-        </a>
-        <p style="margin-left:15px">구독자수, 영상수</p>
-      </div>
-
-      <div style="height: 240px; margin:10px; float:right; width:300px; width:20%">
-        <ul class="actions" style="margin-top:85px;" >
-          <li><a href="#" class="button" >관리</a></li>
-          <li><a href="#" class="button">삭제</a></li>
-        </ul>
-      </div>
-    </div>
-  </section>
 </div>
 
 </div>

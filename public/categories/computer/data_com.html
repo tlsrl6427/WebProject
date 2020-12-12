@@ -6,8 +6,167 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../../html5/assets/css/main.css" />
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+    <script src="../../googlelogin.js?useEmulator=true"></script>
 		<script src="../../openPopup.js"></script>
+<script>
+function createDiv(testid, name){
+		var newDIVout = document.createElement("div");
+		newDIVout.setAttribute("width","220px");
+		newDIVout.setAttribute("id", testid+"_out");
+		newDIVout.setAttribute("height","220px");
+		newDIVout.style.float="left";
+		newDIVout.style.margin="20px";
+		document.getElementById("sec").appendChild(newDIVout);
 
+		var newDIVimg = document.createElement("div");
+		newDIVimg.setAttribute("id", testid+"_in");
+		newDIVimg.setAttribute("class", "image-container");
+		newDIVimg.setAttribute("height","160px");
+		newDIVimg.setAttribute("width","200px");
+		newDIVimg.style.float="left";
+		newDIVimg.style.overflow="hidden";
+		newDIVimg.style.display="flex";
+		newDIVimg.style.alignItems="center";
+		newDIVimg.style.justifyContent="center";
+		newDIVimg.style.margin="10px";
+		document.getElementById(testid+"_out").appendChild(newDIVimg);
+
+		var newA = document.createElement("a");
+		newA.setAttribute("href", "../../channel_private.html?"+name);
+		newA.setAttribute("id", testid+"_a");
+		newA.setAttribute("class", "test");
+		document.getElementById(testid+"_in").appendChild(newA);
+
+		var newImg = document.createElement("img");
+		newImg.setAttribute("id", testid+"_img");
+		newImg.setAttribute("onload", "resize(this)");
+		newImg.style.display="block";
+		document.getElementById(testid+"_a").appendChild(newImg);
+
+		var newDIVname = document.createElement("div");
+		newDIVname.style.marginLeft="10px";
+		newDIVname.style.height="220px";
+		newDIVname.innerHTML = "<strong>" + name + "</strong>"+"<br>"+"구독자수, 동영상수";
+		document.getElementById(testid+"_out").appendChild(newDIVname);
+}
+
+function resize(img){
+
+   var width = img.width;
+   var height = img.height;
+
+   var maxWidth = 160;
+   var maxHeight = 200;
+
+   if(width > maxWidth || height > maxHeight){
+
+      if(width > height){
+         resizeWidth = maxWidth;
+         resizeHeight = (height * resizeWidth) / width;
+
+      }else{
+         resizeHeight = maxHeight;
+         resizeWidth = (width * resizeHeight) / height;
+      }
+
+   }else{
+      resizeWidth = width;
+      resizeHeight = height;
+   }
+
+   img.width = resizeWidth;
+   img.height = resizeHeight;
+}
+
+function initApp(){
+	// Listening for auth state changes.
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				var id = "test";
+				var idnum =1;
+				console.log("로그인 상태");
+				name = user.displayName;
+				email = user.email;
+				photoUrl = user.photoURL;
+				emailVerified = user.emailVerified;
+				uid = user.uid;
+				var dataRef = firebase.database().ref('/channel_List');
+				dataRef.once('value', (snapshot)=>{
+					snapshot.forEach((childSnapshot) => {
+					var childKey = childSnapshot.key;
+     			var childData = childSnapshot.val();
+					console.log(childData.name+" "+id+idnum);
+					createDiv(id+(++idnum), childData.name);
+					url = childData.imgpath;
+					var img = document.getElementById(id+idnum+"_img");
+					img.src = url;
+					});
+
+				});
+
+			} else {
+					console.log("로그아웃 상태");
+
+		}
+
+	});
+
+}
+
+window.onload=function(){
+	initApp();
+}
+</script>
+
+<script>
+/*
+var user = firebase.auth().currentUser;
+if (user != null) {
+	name = user.displayName;
+	email = user.email;
+	photoUrl = user.photoURL;
+	emailVerified = user.emailVerified;
+	uid = user.uid;
+}else{
+	console.log("먼가 문제가잇ㅇ므");
+}
+*/
+
+</script>
+
+<script>
+
+		function downImgURL(imgId){
+			var storageRef = firebase.database().ref('/test/'+uid+"/channel_info");
+			var pathRef = storageRef.child('basketball_1.jpg');
+			firebase.auth().onAuthStateChanged(function(user) {
+					if (user) {
+						pathRef.getDownloadURL().then(function(url){
+							var img = document.getElementById(imgId+"_img");
+	            img.src = url;
+						//document.getElementById(divname).innerHTML = "<img src='" + url + "'>";
+					}).catch(function(error){
+						alert(error.message);
+					});
+					}else{
+
+					}
+				});
+		}
+/*
+		firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+			downImgURL();
+				}else{
+
+				}
+			});
+*/
+</script>
 	</head>
 	<body class="is-preload">
 
@@ -30,90 +189,39 @@
 		</section>
 
 		<ul class="icons">
-			<li><a href="javascript:openWindowPop('../../login.html', 'popup');" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449"> 로그인</span></a></li>
+		<li><a href="javascript:openWindowPop('../../login.html', 'popup');" class="fa fa-user-circle fa-lg">
+			<span class="label" style="color:#3D4449">
+				<a id="logURL" href="javascript:openWindowPop('../../login.html', 'popup');">
+					로그인
+				</a>
+			</span>
+			<script>
+			switch (localStorage.getItem("logined")) {
+				case 'logined':
+					document.getElementById("logURL").innerHTML="마이페이지";
+					document.getElementById("logURL").setAttribute('href', '../../mychannel.html');
+					break;
+				case '':
+					document.getElementById("logURL").innerHTML="로그인";
+					document.getElementById("logURL").setAttribute('href', "javascript:openWindowPop('../../login.html', 'popup');");
+					break;
+				default:
+
+			}
+			</script>
+		</a></li>
 		</ul>
 
 	</header>
 
-		<section>
-			<header class="major">
-				<h2>데이터통신</h2>
-			</header>
-				<div style="width:220px; height:250px; float:left; margin:20px">
-					<div class="image-container" style="height: 160px; width: 200px; float:left; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:10px; ">
-						<a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU" style="display:block"></img></a>
-					</div>
-					<div style="margin-left:10px; height:220px">
-						<a href="#" class="test" ><strong>데이터통신1</strong><br></a>구독자수, 동영상수
-					</div>
-				</div>
+	<section id="sec">
 
-				<div style="width:220px; height:250px;  float:left;margin:20px">
-					<div class="image-container" style="height: 160px; width: 200px; float:left; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:10px; ">
-						<a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU" style="display:block"></img></a>
-					</div>
-					<div style=" margin-left:10px; height:220px">
-						<a href="#" class="test" ><strong>데이터통신2</strong><br></a>구독자수, 동영상수
-					</div>
-				</div>
+		<header class="major">
+			<h2>데통</h2>
+		</header>
 
-				<div style="width:220px; height:250px;  float:left;margin:20px">
-					<div class="image-container" style="height: 160px; width: 200px; float:left; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:10px; ">
-						<a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU" style="display:block"></img></a>
-					</div>
-					<div style=" margin-left:10px; height:220px">
-						<a href="#" class="test" ><strong>데이터통신3</strong><br></a>구독자수, 동영상수
-					</div>
-				</div>
-
-				<div style="width:220px; height:250px;  float:left;margin:20px">
-					<div class="image-container" style="height: 160px; width: 200px; float:left; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:10px; ">
-						<a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU" style="display:block"></img></a>
-					</div>
-					<div style=" margin-left:10px; height:220px">
-						<a href="#" class="test" ><strong>데이터통신4</strong><br></a>구독자수, 동영상수
-					</div>
-				</div>
-
-				<div style="width:220px; height:250px;  float:left;margin:20px">
-					<div class="image-container" style="height: 160px; width: 200px; float:left; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:10px; ">
-						<a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU" style="display:block"></img></a>
-					</div>
-					<div style=" margin-left:10px; height:220px">
-						<a href="#" class="test" ><strong>데이터통신5</strong><br></a>구독자수, 동영상수
-					</div>
-				</div>
-
-				<div style="width:220px; height:250px;  float:left;margin:20px">
-					<div class="image-container" style="height: 160px; width: 200px; float:left; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:10px; ">
-						<a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU" style="display:block"></img></a>
-					</div>
-					<div style=" margin-left:10px; height:220px">
-						<a href="#" class="test" ><strong>데이터통신6</strong><br></a>구독자수, 동영상수
-					</div>
-				</div>
-
-				<div style="width:220px; height:250px;  float:left;margin:20px">
-					<div class="image-container" style="height: 160px; width: 200px; float:left; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:10px; ">
-						<a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU" style="display:block"></img></a>
-					</div>
-					<div style=" margin-left:10px; height:220px">
-						<a href="#" class="test" ><strong>데이터통신7</strong><br></a>구독자수, 동영상수
-					</div>
-				</div>
-
-				<div style="width:220px; height:250px;  float:left;margin:20px">
-					<div class="image-container" style="height: 160px; width: 200px; float:left; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:10px; ">
-						<a href="#" class="test"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkJocDo9hkBuj_WyT8OOGZ3ha2tWjv5NgoXg&usqp=CAU" style="display:block"></img></a>
-					</div>
-					<div style=" margin-left:10px; height:220px">
-						<a href="#" class="test" ><strong>데이터통신8</strong><br></a>구독자수, 동영상수
-					</div>
-				</div>
-		</section>
-
-						</div>
-
+	</section>
+</div>
 					</div>
 
 					<div id="sidebar">
@@ -184,7 +292,7 @@
 
 
 		<!-- Scripts 아직뭔지 모르겠음-->
-		<script src="../../html5/assets/js/jquery_main.js"></script>
+    <script src="../../html5/assets/js/jquery_main.js"></script>
     <script src="../../html5/assets/js/browser_main.js"></script>
     <script src="../../html5/assets/js/breakpoints_main.js"></script>
     <script src="../../html5/assets/js/util.js"></script>

@@ -64,8 +64,8 @@
       }, function(){
         uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
         console.log('File available at', downloadURL);
-        channelRef_user.child("channel_info").push({"name":channel_name, "date": date, "imgpath": downloadURL});
-        channelRef_list.push({"name":channel_name, "date": date, "imgpath": downloadURL, "user": uid});
+        channelRef_user.child("channel_info").push({"name":channel_name, "time": time, "imgpath": downloadURL});
+       channelRef_list.push({"name":channel_name, "time": time, "imgpath": downloadURL, "user": uid});
         });
       });
     }
