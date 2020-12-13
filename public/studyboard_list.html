@@ -112,7 +112,9 @@
             </li>
 
 
+
             <!-- 게시물이 출력될 영역-->
+        <!--
             <li>
                 <ul>
                     <li style="text-align:center;">생활</li>
@@ -123,6 +125,7 @@
                     <li style="text-align:center;">0</li>
                 </ul>
             </li>
+
 
             <li>
                 <ul>
@@ -155,9 +158,105 @@
                     <li style="text-align:center;">Lv0</li>
                     <li style="text-align:center;">0</li>
                 </ul>
-            <li>
+            </li>
+-->
+
         </ul>
     </li>
+
+
+
+    <script src="html5/assets/js/jquery_main.js"></script>
+    <script src="html5/assets/js/browser_main.js"></script>
+    <script src="html5/assets/js/breakpoints_main.js"></script>
+    <script src="html5/assets/js/util.js"></script>
+    <script src="html5/assets/js/main.js"></script>
+
+
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="../../openPopup.js"></script>
+
+        <script>
+          // Your web app's Firebase configuration
+          // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+          var firebaseConfig = {
+            apiKey: "AIzaSyDwMYnkiXywcpwhC8OX0iQGHRwdZLnEm2o",
+            authDomain: "webproject-f85df.firebaseapp.com",
+            databaseURL: "https://webproject-f85df.firebaseio.com",
+            projectId: "webproject-f85df",
+            storageBucket: "webproject-f85df.appspot.com",
+            messagingSenderId: "505722645824",
+            appId: "1:505722645824:web:8edc2cb13f06ccf175dea5",
+            measurementId: "G-HFWKZR7F96"
+          };
+          // Initialize Firebase
+          if (firebase.apps.length === 0) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        </script>
+        <script>
+        var storageRef = firebase.storage().ref();
+        var dataRef = firebase.database().ref();
+        var pathRef = storageRef.child('basketball_1.jpg');
+
+        function downImgURL(){pathRef.getDownloadURL().then(function(url){
+          var imgPath=url;
+          console.log(imgPath);
+        }).catch(function(error){
+          alert(error.message);
+        });
+
+        }
+      </script>
+
+
+  <script>
+  function list_studyboard() {
+  firebase.database().ref("teststudyboard").on('child_added',function(snapshot){
+
+  var category = snapshot.val().category;
+  var createtime = snapshot.val().createtime;
+  var level = snapshot.val().level;
+  var message = snapshot.val().message;
+  var title = snapshot.val().title;
+  var username =snapshot.val().username;
+  var views = snapshot.val().views;
+
+
+  var studyboardobject =
+  "<li>"+
+      "<ul>"+
+          "<li style=\"text-align:center;\">"+ category +"</li>"+
+          "<li class=\"left\"><a href=\"#\" style=\"color:#3D4449\"><p>"+title+"</p></a></li>"+
+          "<li style=\"text-align:center;\">"+createtime + "</li>"+
+          "<li style=\"text-align:center;\">"+username+"</li>"+
+          "<li style=\"text-align:center;\">"+level+"</li>"+
+          "<li style=\"text-align:center;\">"+views+"</li>"+
+      "</ul>"+
+  "</li>";
+
+  $("#ulTable").append(studyboardobject);
+
+
+console.log(snapshot.key);
+  } );
+  }
+
+  </script>
+
+<script>
+list_studyboard();
+</script>
+
+
+
+
+
+
 
     <!-- 게시판 페이징 영역 -->
     <li>
@@ -176,7 +275,7 @@
   <!-- 글쓰기 버튼 영역 -->
       <div style="height: 210px; float:right; ">
           <ul class="actions" >
-            <li><a href="#" class="button">글쓰기</a></li>
+            <li><a href="studyboard_write.html" class="button">글쓰기</a></li>
           </ul>
       </div>
 
