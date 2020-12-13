@@ -1,370 +1,107 @@
-    <!DOCTYPE HTML>
-
-    <html>
-    	<head>
-    		<title>E-tube</title>
-    		<meta charset="utf-8" />
-    		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    		<link rel="stylesheet" href="html5/assets/css/main.css" />
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+    <script src="googlelogin.js?useEmulator=true"></script>
 
     <script>
-    function openWindowPop(url, name){
-        var options = 'top=200, left=500, width=250, height=120, status=no, menubar=no, toolbar=no, resizable=no, fullscreen=no, location=no';
-        window.open(url, name, options);
-    }
-    </script>
+      function initApp() {
+        firebase.auth().onAuthStateChanged(function(user) {
+      			if (user) {
+      				console.log("로그인 상태");
+      				name = user.displayName;
+      				email = user.email;
+      				photoUrl = user.photoURL;
+      				emailVerified = user.emailVerified;
+      				uid = user.uid;
+              console.log(name);
+              document.getElementById("username").innerHTML=name;
+            } else {
+                console.log("로그아웃 상태");
 
+          }
+            });
 
+  }
 
-
-
-
-    <style>
-    body{
-
-            font-family:"맑은 고딕";
-    }
-        ul, li{
-            list-style:none;
-            padding:0;
-            margin:0;
-    }
-
-        #mainWrapper{
-            width: 1000px;
-            margin: 0 auto; /*가운데 정렬*/
-        }
-
-    #mainWrapper > ul > li:first-child {
-            text-align: center;
-            font-size:14pt;
-            height:40px;
-            vertical-align:baseline;
-            line-height:30px;
+      window.onload = function() {
+      initApp();
     }
 
-        #ulTable {margin-top:10px;}
+    function db(){
+      var user = firebase.auth().currentUser;
+      if (user != null) {
+        name = user.displayName;
+        email = user.email;
+        photoUrl = user.photoURL;
+        emailVerified = user.emailVerified;
+        uid = user.uid;
+      }else{
+        console.log("먼가 문제가잇ㅇ므");
+      }
 
+      var channelRef_user = firebase.database().ref('userInfo/'+uid);
+      var channelRef_list = firebase.database().ref('board_List/');
 
-        #ulTable > li:first-child > ul > li {
-            background-color:#F56A6A;
-            font-weight:bold;
-            text-align:center;
-    				color:#fff;
-    }
+      //요소
+      var d = new Date();
+      var date = d.getFullYear() + "_" + d.getMonth() + "_" + d.getDate() + "_" + d.getHours() + "_" + d.getMinutes();
+      var time=date+ "_" + d.getSeconds();
+      var title = document.getElementById("title").value;
+      var contents = document.getElementById("contents").value;
+      var username = name;
 
-        #ulTable > li > ul {
-            clear:both;
-            padding:0px auto;
-            position:relative;
-            min-width:40px;
-    }
-        #ulTable > li > ul > li {
-            float:left;
-            font-size:10pt;
-            border-bottom:1px solid silver;
-            vertical-align:baseline;
-    				line-height:35px;
-    				height:35px;
-    }
-
-        #ulTable > li > ul > li:first-child               {width:10%;} /*No 열 크기*/
-        #ulTable > li > ul > li:first-child +li           {width:40%;} /*제목 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li        {width:15%;} /*작성일 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li+li     {width:15%;} /*작성자 열 크기*/
-        #ulTable > li > ul > li:first-child +li+li+li+li{width:10%;} /*조회수 열 크기*/
-    		#ulTable > li > ul > li:first-child +li+li+li+li+li{width:10%;} /*조회수 열 크기*/
-
-
-        #divPaging {
-              clear:both;
-            margin:0 auto;
-            width:220px;
-            height:50px;
-    }
-
-        #divPaging > div {
-            float:left;
-            width: 30px;
-            margin:0 auto;
-            text-align:center;
-    }
-
-        #liSearchOption {clear:both;}
-        #liSearchOption > div {
-            margin:0 auto;
-            margin-top: 30px;
-            width:auto;
-            height:100px;
+      channelRef_user.child('board_info').push({"title": title, "time": time, "contents": contents, "username": username});
+     channelRef_list.push({
+       "title":title,
+       "time": time,
+       "contents": contents,
+       "userid": uid,
+       "username": username
+     },(error) => {
+  if (error) {
+    // The write failed...
+  } else {
+    alert("작성이 완료되었습니다");
+   location.href='studyboard_list.html';
+  }
+});
 
     }
-
-        .left {
-            text-align : left;
-    }
-
-
-    </style>
-
-    	</head>
-    	<body class="is-preload">
-
-    		<!-- Wrapper -->
-    			<div id="wrapper">
-
-    				<!-- Main -->
-    					<div id="main">
-
-    	<!-- Header -->
-    <div class="inner">
-    	<header id="header">
-    		<a href="index.html" class="logo"><h1>E-tube</h1> </a>
-
-    		<!-- Search -->
-    		<section id="search" class="alt">
-    			<form method="post" action="channel_select.html">
-    				<input type="text" onkeypress="if(event.keyCode == 13){search_channel();}"name="query" id="query" placeholder="Search" />
-    			</form>
-    		</section>
-
-    		<ul class="icons">
-    			<li><a href="javascript:openWindowPop('login.html', 'popup');" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449"> 로그인</span></a></li>
-    		</ul>
-
-    	</header>
-    	<div id="main">
-    		<div class="inner">
-
-
-    	<div margin-top:10px;>
-        <li>
-          <div style="float:left; margin: 5px 5px 5px 5px">
-            카테고리:
-          </div>
-
-        </li>
-    		<li id="writeCategory">
-    				<div style=" margin: 5px 5px 5px 5px">
-    						<select id='writeCategoryOption' >
-    								<option value='A'>농구</option>
-    								<option value='T'>축구</option>
-    								<option value='C'>배구</option>
-
-    						</select>
-
-    				</div>
-    		</li>
-        <li>
-          제목
-        </li>
-        <div class="col-6 col-12-xsmall">
-          <textarea name="write-title" id="write-title" placeholder="제목" rows= "1"></textarea>
-        </div>
-    	</div>
-      <li>
-        내용
-      </li>
-
-      <div class="col-12">
-        <textarea name="write-message" id="write-message" placeholder="내용입력" rows="6"></textarea>
-      </div>
-
-      <div class="text-center">
-            <button type="button" class="btn btn-success write" id="write" name="write">쓰기</button>
-      </div>
-
-    </div>
-
-
-
-    						</div>
-
-    					</div>
-
-
-    					<div id="sidebar">
-    				  <div class="inner">
-
-
-    				    <!-- Menu -->
-    				      <nav id="menu">
-    				        <header class="major">
-    				          <h2>카테고리</h2>
-    				        </header>
-    				        <ul>
-    				          <li>
-    				            <span class="opener">스포츠</span>
-    				            <ul>
-    				              <li><a href="categories/sports/basketball.html">농구</a></li>
-    				              <li><a href="categories/sports/baseball.html">야구</a></li>
-    				              <li><a href="categories/sports/football.html">축구</a></li>
-    				              <li><a href="categories/sports/swimming.html">수영</a></li>
-    				            </ul>
-    				          </li>
-    				          <li>
-    				            <span class="opener">음악</span>
-    				            <ul>
-    				              <li><a href="categories/music/piano.html">피아노</a></li>
-    				              <li><a href="categories/music/guitar.html">기타</a></li>
-    				              <li><a href="categories/music/flute.html">플룻</a></li>
-    				              <li><a href="categories/music/violin.html">바이올린</a></li>
-    				            </ul>
-    				          </li>
-    				          <li>
-    				            <span class="opener">생활</span>
-    				            <ul>
-    				              <li><a href="categories/lifestyle/cleaning.html">청소</a></li>
-    				              <li><a href="categories/lifestyle/saving.html">저축</a></li>
-    				              <li><a href="categories/lifestyle/cooking.html">요리</a></li>
-    				              <li><a href="categories/lifestyle/education.html">교육</a></li>
-    				            </ul>
-    				          </li>
-    				          <li>
-    				            <span class="opener">컴퓨터</span>
-    				            <ul>
-    				              <li><a href="categories/compter/web.html">웹프로그래밍</a></li>
-    				              <li><a href="categories/compter/db.html">데이터베이스</a></li>
-    				              <li><a href="categories/compter/data_com.html">데이터통신</a></li>
-    				              <li><a href="categories/compter/language.html">언어(자바/c++)</a></li>
-    				            </ul>
-    				          </li>
-    				          <li>
-    				            <span class="opener">게임</span>
-    				            <ul>
-    				              <li><a href="categories/game/lol.html">롤</a></li>
-    				              <li><a href="categories/game/fifa.html">피파</a></li>
-    				              <li><a href="categories/game/maplestory.html">메이플</a></li>
-    				              <li><a href="categories/game/cartrider.html">카트라이더</a></li>
-    				            </ul>
-    				          </li>
-    									<li><a href="studyboard.html">스터디게시판</a></li>
-
-    				        </ul>
-    				      </nav>
-
-
-    						</div>
-    					</div>
-
-    			</div>
-
-</div>
-
-
-    			<script src="html5/assets/js/jquery_main.js"></script>
-    			<script src="html5/assets/js/browser_main.js"></script>
-    			<script src="html5/assets/js/breakpoints_main.js"></script>
-    			<script src="html5/assets/js/util.js"></script>
-    			<script src="html5/assets/js/main.js"></script>
-
-          <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
-          <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
-          <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
-          <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
-          <script src="/__/firebase/init.js"></script>
-          <script src="../../openPopup.js"></script>
-
-              <script>
-                // Your web app's Firebase configuration
-                // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-                var firebaseConfig = {
-                  apiKey: "AIzaSyDwMYnkiXywcpwhC8OX0iQGHRwdZLnEm2o",
-                  authDomain: "webproject-f85df.firebaseapp.com",
-                  databaseURL: "https://webproject-f85df.firebaseio.com",
-                  projectId: "webproject-f85df",
-                  storageBucket: "webproject-f85df.appspot.com",
-                  messagingSenderId: "505722645824",
-                  appId: "1:505722645824:web:8edc2cb13f06ccf175dea5",
-                  measurementId: "G-HFWKZR7F96"
-                };
-                // Initialize Firebase
-                if (firebase.apps.length === 0) {
-                firebase.initializeApp(firebaseConfig);
-              }
-              </script>
-              <script>
-              var storageRef = firebase.storage().ref();
-              var dataRef = firebase.database().ref();
-              var pathRef = storageRef.child('basketball_1.jpg');
-
-
-              function downImgURL(){pathRef.getDownloadURL().then(function(url){
-                var imgPath=url;
-                console.log(imgPath);
-              }).catch(function(error){
-                alert(error.message);
-              });
-
-              }
-            </script>
-
-    <script type="text/javascript" charset="utf-8" >
-      $(document).ready(function () {
-
-
-
-        $(document).on('click', '.write', function () {
-
-          //내가 쓴글 가져오기 - jquery방식으로 가져왔다.
-
-
-            saveNewStudyboard();
-
-        });
-        });
-
-
-        //쓰기 버튼 눌렀을 때 호출 되는 함수
-        function saveNewStudyboard() {
-
-          //thanks 라는 테이블을 만들고 하위 데이터에 유저 아이디를 넣어준다. 그곳에 push로 가상의 키를 넣고, 객체를 넣어준다.!!!!
-
-          var d = new Date();
-          var year = d.getFullYear().toString();
-          var month = (d.getMonth() + 1).toString();
-          var day = d.getDate().toString();
-          var hours = d.getHours().toString();
-          var min = d.getMinutes().toString();
-          var sec = d.getSeconds().toString();
-          var currentTime = year +"."+ month +"."+ day;
-          //var currentTime = year +"."+ month +"."+ day + hours + min + sec;
-
-
-
-          var wmessage = $('#write-message').val();
-          var wtitle = $('#write-title').val();
-          var wcatagory= $("#writeCategoryOption option:selected").text();
-          //console.log(wtitle);
-          console.log(wcatagory);
-
-          var newstudyboardRef = firebase.database().ref("teststudyboard");
-
-          // 해당 객체의 key 값이 자동으로 생성된다.
-          var newstudyboard = newstudyboardRef.push(); // 해당 객체의 key 값이 자동으로 생성된다.
-
-          //로그인한 유저의 pk값,이름,내용,시간 데이터
-          var obj = {
-            username: "작성자이름",
-            category: wcatagory,
-            title: wtitle,
-            message: wmessage,
-            createtime: currentTime,
-            level: "LV0",
-            views: "0"
-          };
-          //위에서 thankRef.push()로 만들어진 key아래 위치에 저장해준다.
-          newstudyboard.set(obj);
-
-
-
-          $('#write-message').val("");
-          $('#write-title').val("");
-
-        }
-
-
-
-    </script>
-
-    	</body>
-    </html>
+      </script>
+  </head>
+  <body>
+    <div>
+           <form>
+               <table>
+                   <thead>
+                       <caption>글 쓰기</caption>
+                   </thead>
+                   <tbody>
+                       <tr>
+                           <th>제목 : </th>
+                           <td><input id="title" placeholder = "제목을 입력하세요"></td>
+                       </tr>
+                       <tr>
+                           <th>작성자 : </th>
+                           <td id="username"></td>
+                       </tr>
+                       <tr>
+                           <th>내용 : </th>
+                           <td><textarea id='contents' cols="60" rows="10" placeholder = "내용을 입력하세요"></textarea></td>
+                       </tr>
+                   </tbody>
+               </table>
+               <button type="button" onclick="db();">저장</button>
+
+               <button type="button" onclick="location.href='studyboard_list.html'" >취소</button>
+
+           </form>
+       </div>
+  </body>
+</html>

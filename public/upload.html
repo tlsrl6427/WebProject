@@ -115,11 +115,24 @@
 		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
 		<script src="googlelogin.js?useEmulator=true"></script>
 		<script>
-
-		function db(){
-
+		function initApp() {
+			// Listening for auth state changes.
 			firebase.auth().onAuthStateChanged(function(user) {
 					if (user) {
+						console.log("로그인 상태");
+					} else {
+							console.log("로그아웃 상태");
+
+				}
+
+			});
+		}
+
+		window.onload = function() {
+		initApp();
+		};
+
+		function db(){
 
 			var user = firebase.auth().currentUser;
 			if (user != null) {
@@ -143,7 +156,8 @@
 			var time=date+ "_" + d.getSeconds();
 			var storage = firebase.storage();
 			var storageRef = storage.ref();
-			var imagesRef = storageRef.child(uid+"/video_"+time+".mp4");
+			var imagesRef = storageRef.child(uid+"/"+"video_"+time+".mp4");
+			var video_name = document.getElementById('ex_input').value;
 
 			//경로
 			var selectedFile = document.getElementById('input').files[0];
@@ -151,29 +165,46 @@
 			var imgpath;
 
 			//업로드
-			channelRef_user.once('value', (snapshot)=>{
+			channelRef_user.once('value', (snapshot1)=>{
 
-				snapshot.forEach((childSnapshot1) => {
+				snapshot1.forEach((childSnapshot1) => {
 				var childKey1 = childSnapshot1.key;
 				var childData1 = childSnapshot1.val();
 
 				if(childData1.name == channel_name){
+					console.log("내 목록에서 채널명이 동일한 데이터 발견");
 
-					uploadTask.on('state_changed',function(){
 
+					uploadTask.on('state_changed', function(snapshot){
+		        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+		        console.log('Upload is ' + progress + '% done');
+		        switch (snapshot.state) {
+		        case firebase.storage.TaskState.PAUSED: // or 'paused'
+		        console.log('Upload is paused');
+		        break;
+		        case firebase.storage.TaskState.RUNNING: // or 'running'
+		        console.log('Upload is running');
+		        break;
+		        }
+		      }, function(error){
+						//console.log(error.code);
+		      }, function(){
+							console.log("스토리지에 영상추가완료");
 						uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-						channelRef_user.child(childKey1).child("video_info").push({"name":channel_name, "time": time, "videopath": downloadURL});
 
+						channelRef_user.child(childKey1).child("video_info").push({"name": video_name, "time": time, "videopath": downloadURL});
+						console.log("내 목록에서 디비에 영상경로 추가");
 
-						channelRef_list.once('value', (snapshot)=>{
+						channelRef_list.once('value', (snapshot3)=>{
 
-							snapshot.forEach((childSnapshot2) => {
+							snapshot3.forEach((childSnapshot2) => {
 							var childKey2 = childSnapshot2.key;
 							var childData2 = childSnapshot2.val();
 
 							if(childData2.name == channel_name){
-							channelRef_list.child(childKey2).child("video_info").push({"name":channel_name, "time": time, "videopath": downloadURL, "user": uid});
-
+								console.log("전체 리스트에서 채널명이 동일한 데이터 발견");
+							channelRef_list.child(childKey2).child("video_info").push({"name":video_name, "time": time, "videopath": downloadURL, "user": uid});
+							console.log("전체 리스트 디비에 영상경로 추가");
 						}
 						});
 
@@ -183,7 +214,6 @@
 
 						});
 
-					}, function(error){
 					});
 
 				}
@@ -192,16 +222,6 @@
 
 			});
 
-
-
-
-
-	}else{
-		console.log("로그아웃 상태");
-	}
-
-
-	});
 }
 		</script>
 
@@ -227,7 +247,21 @@
 		</section>
 
 		<ul class="icons">
-			<li><a href="mychannel.html" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449">사용자이름</span></a></li>
+			<li><a id="logURL" href="mychannel.html" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449">로그인</span></a></li>
+			<script>
+				switch (localStorage.getItem("logined")) {
+					case 'logined':
+							document.getElementById("logURL").innerHTML="마이페이지";
+							document.getElementById("logURL").setAttribute('href', 'mychannel.html');
+										break;
+					case '':
+							document.getElementById("logURL").innerHTML="로그인";
+							document.getElementById("logURL").setAttribute('href', "javascript:openWindowPop('login.html', 'popup');");
+										break;
+								default:
+
+					}
+			</script>
 		</ul>
 
 	</header>
