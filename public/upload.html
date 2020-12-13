@@ -156,13 +156,15 @@
 			var time=date+ "_" + d.getSeconds();
 			var storage = firebase.storage();
 			var storageRef = storage.ref();
-			var imagesRef = storageRef.child(uid+"/"+"video_"+time+".mp4");
+			var videoRef = storageRef.child(uid+"/"+"video_"+time+".mp4");
+			var imageRef = storageRef.child(uid+"/"+"video_thumbnail"+time+".jpg");
 			var video_name = document.getElementById('ex_input').value;
 
 			//경로
-			var selectedFile = document.getElementById('input').files[0];
-			var uploadTask = imagesRef.put(selectedFile);
-			var imgpath;
+			var videoFile = document.getElementById('input_video').files[0];
+			var imageFile = document.getElementById('input_image').files[0];
+			var uploadTask1 = videoRef.put(videoFile);
+			var uploadTask2 = videoRef.put(imageFile);
 
 			//업로드
 			channelRef_user.once('value', (snapshot1)=>{
@@ -172,59 +174,80 @@
 				var childData1 = childSnapshot1.val();
 
 				if(childData1.name == channel_name){
-					console.log("내 목록에서 채널명이 동일한 데이터 발견");
 
-
-					uploadTask.on('state_changed', function(snapshot){
-		        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-		        console.log('Upload is ' + progress + '% done');
-		        switch (snapshot.state) {
-		        case firebase.storage.TaskState.PAUSED: // or 'paused'
-		        console.log('Upload is paused');
-		        break;
-		        case firebase.storage.TaskState.RUNNING: // or 'running'
-		        console.log('Upload is running');
-		        break;
+///////////////////////////영상올리기/////////////////////////
+					uploadTask1.on('state_changed', function(snapshot){
+		        	var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+		       	 console.log('Upload is ' + progress + '% done');
+		       	 switch (snapshot.state) {
+		       	 case firebase.storage.TaskState.PAUSED: // or 'paused'
+		       	 console.log('Upload is paused');
+		        	break;
+		        	case firebase.storage.TaskState.RUNNING: // or 'running'
+		        	console.log('Upload is running');
+		        	break;
 		        }
-		      }, function(error){
-						//console.log(error.code);
-		      }, function(){
-							console.log("스토리지에 영상추가완료");
-
-// 레벨기능
-							var exp;
-							var lv;
-							var levelRef = firebase.database().ref('userInfo/'+uid+"/level_info/");
-							levelRef.once("value",function(snapshot){
-								exp = snapshot.val().exp;
-								lv = snapshot.val().level;
-								console.log(exp);
-								console.log(lv);
+		      	}, function(error){
 
 
-							exp +=50;
-							console.log(exp);
-							if(Math.pow(2,lv-1)*50 <= exp ){
-								if(Math.pow(2,lv)*50 <= exp){
-									lv +=1;
+		     	 }, function(){
 
-									console.log("레벨업 축하드립니다");
-								}
+						 // 레벨기능
+						 							var exp;
+						 							var lv;
+						 							var levelRef = firebase.database().ref('userInfo/'+uid+"/level_info/");
+						 							levelRef.once("value",function(snapshot){
+						 								exp = snapshot.val().exp;
+						 								lv = snapshot.val().level;
+
+
+						 							exp +=50;
+						 							if(Math.pow(2,lv-1)*50 <= exp ){
+						 								if(Math.pow(2,lv)*50 <= exp){
+						 									lv +=1;
+
+						 									console.log("레벨업 축하드립니다");
+						 								}
+						 							}
+
+						 							levelRef.update({
+						 								exp: exp,
+						 								level: lv
+						 							});
+
+						 							});
+
+
+						uploadTask1.snapshot.ref.getDownloadURL().then(function(downloadURL1) {
+
+						uploadTask2.on('state_changed', function(snapshot){
+							}, function(error){
+						 }, function(){
+							uploadTask2.snapshot.ref.getDownloadURL().then(function(downloadURL2) {
+							channelRef_user.child(childKey1).child("video_info").push({"name": video_name, "time": time, "videopath": downloadURL1, "thumnnailpath": downloadURL2});
+
+
+							channelRef_list.once('value', (snapshot3)=>{
+
+								snapshot3.forEach((childSnapshot2) => {
+								var childKey2 = childSnapshot2.key;
+								var childData2 = childSnapshot2.val();
+
+								if(childData2.name == channel_name){
+								channelRef_list.child(childKey2).child("video_info").push({"name":video_name, "time": time, "videopath": downloadURL1, "user": uid, "thumnnailpath": downloadURL2});
+
 							}
-
-							levelRef.update({
-								exp: exp,
-								level: lv
 							});
 
+						});
+
+
+
 							});
 
+						});
 
-						uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-
-						channelRef_user.child(childKey1).child("video_info").push({"name": video_name, "time": time, "videopath": downloadURL});
-						console.log("내 목록에서 디비에 영상경로 추가");
-
+/*
 						channelRef_list.once('value', (snapshot3)=>{
 
 							snapshot3.forEach((childSnapshot2) => {
@@ -239,13 +262,15 @@
 						});
 
 					});
-
+*/
 
 
 						});
 
 					});
+///////////////////////////사진올리기///////////////////
 
+/////////////////////////////////////////
 				}
 
 				});
@@ -335,7 +360,8 @@
       </li>
       </div>
 
-			찾아보기: <input type="file" id="input"/><br>
+			영상 찾아보기: <input type="file" id="input_video"/><br>
+			썸네일 찾아보기: <input type="file" id="input_image"/><br>
 			<button onclick="db();" >디비 등록</button>
 
     </section>
