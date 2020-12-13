@@ -6,23 +6,54 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="html5/assets/css/main.css" />
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+		<script src="googlelogin.js?useEmulator=true"></script>
+		<script src="openPopup.js"></script>
+
 <script>
 function openWindowPop(url, name){
     var options = 'top=200, left=500, width=250, height=120, status=no, menubar=no, toolbar=no, resizable=no, fullscreen=no, location=no';
     window.open(url, name, options);
 }
 </script>
-
 <script>
-/*
-window.addEventListener("message", function(event){
-	if(event.data=="logined"){
-		alert("aesreajuie");
-		var loginBtn = document.getElementById("loginBtn");
-	  loginBtn.innerHTML = "로그아웃";
+function initApp(){
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				console.log("로그인 상태");
+				name = user.displayName;
+				email = user.email;
+				photoUrl = user.photoURL;
+				emailVerified = user.emailVerified;
+				uid = user.uid;
+
+				temp = location.href.split("?");
+				var videoRef_channel = firebase.database().ref('/channel_List/'+temp[1]+"/video_info/");
+				videoRef_channel.once('value', (snapshot)=>{
+
+					snapshot.forEach((childSnapshot) => {
+						var childKey = childSnapshot.key;
+						var childData = childSnapshot.val();
+						if(childKey ==temp[2]){
+						document.getElementById("video").src=childData.videopath;
+						document.getElementById("name").innerHTML=childData.name;
+					}
+					});
+
+				});
+			}
+		});
 	}
-});
-*/
+
+
+			window.onload=function(){
+					initApp();
+				}
+
+
 </script>
 
 	</head>
@@ -56,12 +87,12 @@ window.addEventListener("message", function(event){
   <section>
     <div id="Wrapper"  style="width: 800px; margin: 0 auto; position:relative">
     <div >
-        <a href="#" class="test"> <video src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\CAT-1.mp4" style="width:800px; height:450px;"
+        <a href="#" class="test"> <video id="video" src="" style="width:800px; height:450px;"
         controls loop></video> </a>		<!--poster="#" 하면 대표 이미지 선택-->
     </div>
     <div style="height: 150px;width:60%;float:left;">
       <a href="#" >
-        <h2 style="margin-top:10px;">고양이 샤워시키는 방법</h2>
+        <h2 id="name" style="margin-top:10px;"></h2>
       </a>
       <p >조회수, 영상업로드날짜<br>
         <a href="#">강의 자료 링크</a></p>

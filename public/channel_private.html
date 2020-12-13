@@ -56,6 +56,46 @@
 		   img.height = resizeHeight;
 		}
 
+		function createsSec(){
+
+			var dataRef2 = firebase.database().ref('/channel_List');
+			dataRef2.once('value', (snapshot)=>{
+
+				snapshot.forEach((childSnapshot) => {
+				var childKey = childSnapshot.key;
+				var childData = childSnapshot.val();
+
+				if(childData.name==channel_name){
+					dataRef2.child(childKey).remove();
+					location.reload();
+				}
+
+			});
+
+		});
+
+
+
+
+
+		}
+
+			function moveBtn(){
+			var ele=document.getElementById('progressing');
+			var width = 5;
+			var id =setInterval(frame, 45);
+			function frame(){
+				if(width>=100){
+					clearInterval(id);
+				}else{
+					width ++;
+					ele.style.width=width+"%";
+					ele.innerHTML=width+"%";
+					}
+				}
+			}
+
+
 		function initApp(){
 			firebase.auth().onAuthStateChanged(function(user) {
 					if (user) {
@@ -67,7 +107,7 @@
 						uid = user.uid;
 			temp = location.href.split("?");
 
-			var channelRef_user = firebase.database().ref('userInfo/'+uid+'/channel_info');
+			var channelRef_user = firebase.database().ref('/channel_List');
 			channelRef_user.once('value', (snapshot)=>{
 
 				snapshot.forEach((childSnapshot) => {
@@ -84,6 +124,68 @@
 					var a1 = document.getElementById("a1");
 					a1.setAttribute("href", "upload.html?"+childData.name);
 					a1.innerHTML="영상 업로드";
+
+					var videoRef_channel = firebase.database().ref('/channel_List/'+childKey+"/video_info");
+
+					videoRef_channel.once('value', (snapshot1)=>{
+
+						snapshot1.forEach((childSnapshot1) => {
+							var childKey1 = childSnapshot1.key;
+							var childData1 = childSnapshot1.val();
+							var urlKey = childKey+"?"+childKey1;
+								var object =
+								"<section>"+
+									"<div class=\"\" style=\"margin-top:5px; height:240px; position:relative; background-color:#F1F1F1 \">"+
+
+										"<div class=\"image-container\" style=\"height:200px; width:350px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px; position:absolute\">"+
+											"<a href=\"#\" class=\"test\">"+
+												"<img src=\"" + childData1.thumnnailpath+ "\">"+
+												"</img>" +
+											"</a>"+
+										"</div>"+
+
+										"<div style=\"height: 200px;left:350px; width:40%; position:absolute; margin:20px\">"+
+											"<a href=\"video.html?"+urlKey+"\">"+
+												"<h2 style=\"margin-top:10px; margin-left:10px\">"+
+												childData1.name+
+												"</h2>"+
+											"</a>"+
+											"<p style=\"margin-left:10px;\">"+
+											"조회수,추천수"+
+											"<br>"+
+												"영상업로드날짜"+
+												"<br>"+
+											"<a href=\"#\">"+
+											"강의 자료 링크"+
+											"</a>"+
+											"</p>"+
+
+											"<div style=\"margin:10px\" class=\"conatiner\">"+
+												"<div class=\"prog\" style=\"background:#FFFFFF\">"+
+													"<div class=\"progs\" id=\"progressing\" style=\"width:0%; height:30px; background:#FF8080;color:#fff;text-align: center;line-height: 30px;\" >"+
+													"</div>"+
+												"</div>"+
+											"</div>"+
+
+										"</div>"+
+
+										"<div style=\"height: 200px; width: 100px; float:right;margin:20px;\">"+
+											"<button style=\"margin-top:70px;\" onClick=\"moveBtn()\">"+
+											"test"+
+											"</button>"+
+										"</div>"+
+									"</div>"+
+								"</section>"
+
+								$("#initDiv").append(object);
+
+
+
+
+						});
+					});
+
+
 				}else{
 
 				}
@@ -205,24 +307,31 @@
 								</li>
 
 
-								<div class="inner" >
+								<div id="initDiv" class="inner" >
 									<!--
 									<section>
 				  					<div class="" style="margin-top:5px; height:240px; position:relative; background-color:#F1F1F1 ">
+
 											<div class="image-container" style="height:200px; width:350px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px; position:absolute">
-												<a href="#" class="test"> <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg"></img> </a>
+												<a href="#" class="test">
+													<img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg">
+													</img>
+												</a>
 											</div>
+
 											<div style="height: 200px;left:350px; width:40%; position:absolute; margin:20px">
 					  						<a href="#" >
 													<h2 style="margin-top:10px; margin-left:10px">고양이 샤워시키는 방법</h2>
 												</a>
 												<p style="margin-left:10px;">조회수,추천수<br>
 													영상업로드날짜<br>
-												<a href="#">강의 자료 링크</a></p>
+												<a href="#">강의 자료 링크</a>
+												</p>
 
 												<div style="margin:10px" class="conatiner">
 													<div class="prog" style="background:#FFFFFF">
-														<div class="progs" id="progressing" style="width:0%; height:30px; background:#FF8080;color:#fff;text-align: center;line-height: 30px;" ></div>
+														<div class="progs" id="progressing" style="width:0%; height:30px; background:#FF8080;color:#fff;text-align: center;line-height: 30px;" >
+														</div>
 													</div>
 												</div>
 
@@ -249,7 +358,7 @@
 											</div>
 										</div>
 									</section>
-								-->
+-->
 								</div>
 					</div>
 				</div>

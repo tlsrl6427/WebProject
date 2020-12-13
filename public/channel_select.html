@@ -3,10 +3,9 @@
 <html>
 	<head>
 		<title>E-tube</title>
-		<script>@page contentType = "text/html; charest= utf-8" </script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="html5/assets/css/main.css" />
+		<link rel="stylesheet" href="../html5up-editorial\assets\css\main.css" />
 
 
 
@@ -41,13 +40,12 @@
 
 		<div id="main">
 			<div class="inne" >
-				<div class= "nnnn"> </div>
+				<div class= "nnnn"> n</div>
 
-
-<!--
 				<section>
 					<div class="" style=" margin-left:8%; height: 250px; position:relative; ">
 
+				<!-- Section -->
 
 						<div class="image-container" style="height: 210px; width: 280px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px">
 							<a href="#" class="test"> <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg"></img> </a>
@@ -72,7 +70,7 @@
 				<section>
 					<div class="" style=" margin-left:8%; height: 250px; position:relative; ">
 
-
+				<!-- Section -->
 
 						<div class="image-container" style="height: 210px; width: 280px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px">
 							<a href="#" class="test"> <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg"></img> </a>
@@ -96,7 +94,7 @@
 				<section>
 					<div class="" style=" margin-left:8%; height: 250px; position:relative; ">
 
-
+				<!-- Section -->
 
 						<div class="image-container" style="height: 210px; width: 280px; float:left; overflow:hidden; display:flex; align-items: center; justify-content: center; margin:20px">
 							<a href="#" class="test"> <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/17805/production/_105016269_roxy1.jpg"></img> </a>
@@ -116,8 +114,6 @@
 						</div>
 					</div>
 				</section>
-
-			-->
 			</div>
 
 		</div>
@@ -194,11 +190,11 @@
 
 
 		<!-- Scripts 아직뭔지 모르겠음-->
-		<script src="html5/assets/js/jquery_main.js"></script>
-		<script src="html5/assets/js/browser_main.js"></script>
-		<script src="html5/assets/js/breakpoints_main.js"></script>
-		<script src="html5/assets/js/util.js"></script>
-		<script src="html5/assets/js/main.js"></script>
+    <script src="../html5up-editorial/assets/js/jquery.min.js"></script>
+    <script src="../html5up-editorial/assets/js/browser.min.js"></script>
+    <script src="../html5up-editorial/assets/js/breakpoints.min.js"></script>
+    <script src="../html5up-editorial/assets/js/util.js"></script>
+    <script src="../html5up-editorial/assets/js/main.js"></script>
 
 
 		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
@@ -245,7 +241,6 @@
 			    var Request = function() {
 			        this.getParameter = function(name) {
 			            var rtnval = '';
-
 			            var nowAddress = unescape(location.href);
 			            var parameters = (nowAddress.slice(nowAddress.indexOf('?') + 1,
 			                    nowAddress.length)).split('&');
@@ -256,11 +251,9 @@
 			                    break;
 			                }
 			            }
-										console.log(rtnval);
 			            return rtnval;
 			        }
 			    }
-
 			    var request = new Request();
 			</script>
 
@@ -270,10 +263,8 @@ function search_channel() {
 
 var chNamee =  request.getParameter("query") ;
 //if(chNamee != null) {chNamee = new String (chNamee.getBytes("8859_1"), "EUC-KR");}
-console.log(chNamee);
 
 var searchChannelName = request.getParameter("query") ;
-console.log(searchChannelName);
 //var searchChannelName = document.getElementById("query").value;
 	//document.getElementById("select_channl_name").textContent = searchChannelName;
 
@@ -291,15 +282,28 @@ else{
 }
 });
 */
-firebase.database().ref("testsearch").on('child_added',function(snapshot){
-	var checksearch = snapshot.key;
 
-if( checksearch.indexOf(searchChannelName)!=-1){
+firebase.database().ref("testsearch/"+searchChannelName).once('value').then(function(snapshot){
+
+//firebase.database().ref("testsearch/"+searchChannelName).startAt(searchChannelName).on('value',function(snapshot){
+
+if(snapshot.val() ) {
 var chName = snapshot.key;
 var chVideoNum = snapshot.val().videonum;
 var chSubscribe = snapshot.val().subscribe;
 var chImg = snapshot.val().channel_img_ref;
 var chLink = snapshot.val().channel_ref;
+
+document.getElementById("select_channl_name").textContent = chName;
+//document.getElementById("select_channl_link").href = chLink ;
+//document.getElementById("select_channl_video").img = chImg;
+//document.getElementById("select_channl_name").textContent = chName;
+//document.getElementById("select_channl_videonum").textContent = "조회수 : "+ chVideoNum + " 구독자수 : "+ chSubscribe ;
+
+var testdocm =" nnnnnnnnnnnnnnnn ";
+
+
+
 
 
 var channel_select_page =
