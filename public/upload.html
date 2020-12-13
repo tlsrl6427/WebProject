@@ -164,7 +164,7 @@
 			var videoFile = document.getElementById('input_video').files[0];
 			var imageFile = document.getElementById('input_image').files[0];
 			var uploadTask1 = videoRef.put(videoFile);
-			var uploadTask2 = videoRef.put(imageFile);
+			//var uploadTask2 = videoRef.put(imageFile);
 
 			//업로드
 			channelRef_user.once('value', (snapshot1)=>{
@@ -219,7 +219,22 @@
 
 
 						uploadTask1.snapshot.ref.getDownloadURL().then(function(downloadURL1) {
+							channelRef_user.child(childKey1).child("video_info").push({"name": video_name, "time": time, "videopath": downloadURL1, "thumnnailpath": "https://firebasestorage.googleapis.com/v0/b/webproject-f85df.appspot.com/o/rF6dRaSzGyewRMDGGfaq4b6Uvgn2%2F2020_11_12_17_42_58.jpg?alt=media&token=f65c1039-f0ff-499c-b902-3e82317abb47"});
 
+							channelRef_list.once('value', (snapshot3)=>{
+
+								snapshot3.forEach((childSnapshot2) => {
+								var childKey2 = childSnapshot2.key;
+								var childData2 = childSnapshot2.val();
+
+								if(childData2.name == channel_name){
+								channelRef_list.child(childKey2).child("video_info").push({"name":video_name, "time": time, "videopath": downloadURL1, "user": uid, "thumnnailpath": "https://firebasestorage.googleapis.com/v0/b/webproject-f85df.appspot.com/o/rF6dRaSzGyewRMDGGfaq4b6Uvgn2%2F2020_11_12_17_42_58.jpg?alt=media&token=f65c1039-f0ff-499c-b902-3e82317abb47"});
+
+							}
+							});
+
+						});
+/*
 						uploadTask2.on('state_changed', function(snapshot){
 							}, function(error){
 						 }, function(){
@@ -246,24 +261,7 @@
 							});
 
 						});
-
-/*
-						channelRef_list.once('value', (snapshot3)=>{
-
-							snapshot3.forEach((childSnapshot2) => {
-							var childKey2 = childSnapshot2.key;
-							var childData2 = childSnapshot2.val();
-
-							if(childData2.name == channel_name){
-								console.log("전체 리스트에서 채널명이 동일한 데이터 발견");
-							channelRef_list.child(childKey2).child("video_info").push({"name":video_name, "time": time, "videopath": downloadURL, "user": uid});
-							console.log("전체 리스트 디비에 영상경로 추가");
-						}
-						});
-
-					});
 */
-
 
 						});
 
