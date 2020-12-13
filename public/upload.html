@@ -190,6 +190,36 @@
 						//console.log(error.code);
 		      }, function(){
 							console.log("스토리지에 영상추가완료");
+
+// 레벨기능
+							var exp;
+							var lv;
+							var levelRef = firebase.database().ref('userInfo/'+uid+"/level_info/");
+							levelRef.once("value",function(snapshot){
+								exp = snapshot.val().exp;
+								lv = snapshot.val().level;
+								console.log(exp);
+								console.log(lv);
+
+
+							exp +=50;
+							console.log(exp);
+							if(Math.pow(2,lv-1)*50 <= exp ){
+								if(Math.pow(2,lv)*50 <= exp){
+									lv +=1;
+
+									console.log("레벨업 축하드립니다");
+								}
+							}
+
+							levelRef.update({
+								exp: exp,
+								level: lv
+							});
+
+							});
+
+
 						uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
 
 						channelRef_user.child(childKey1).child("video_info").push({"name": video_name, "time": time, "videopath": downloadURL});
@@ -223,6 +253,10 @@
 			});
 
 }
+
+
+
+
 		</script>
 
 	</head>
