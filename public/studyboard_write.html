@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+    <script src="googlelogin.js?useEmulator=true"></script>
+
+    <script>
+      function initApp() {
+        firebase.auth().onAuthStateChanged(function(user) {
+      			if (user) {
+      				console.log("로그인 상태");
+      				name = user.displayName;
+      				email = user.email;
+      				photoUrl = user.photoURL;
+      				emailVerified = user.emailVerified;
+      				uid = user.uid;
+              console.log(name);
+              document.getElementById("username").innerHTML=name;
+            } else {
+                console.log("로그아웃 상태");
+
+          }
+            });
+
+  }
+
+      window.onload = function() {
+      initApp();
+    }
+
+    function db(){
+      var user = firebase.auth().currentUser;
+      if (user != null) {
+        name = user.displayName;
+        email = user.email;
+        photoUrl = user.photoURL;
+        emailVerified = user.emailVerified;
+        uid = user.uid;
+      }else{
+        console.log("먼가 문제가잇ㅇ므");
+      }
+
+      var channelRef_user = firebase.database().ref('userInfo/'+uid);
+      var channelRef_list = firebase.database().ref('board_List/');
+
+      //요소
+      var d = new Date();
+      var date = d.getFullYear() + "_" + d.getMonth() + "_" + d.getDate() + "_" + d.getHours() + "_" + d.getMinutes();
+      var time=date+ "_" + d.getSeconds();
+      var title = document.getElementById("title").value;
+      var contents = document.getElementById("contents").value;
+
+      channelRef_user.child('board_info').push({"title": title, "time": time, "contents": contents});
+     channelRef_list.push({
+       "title":title,
+       "time": time,
+       "contents": contents,
+       "user": uid},
+       (error) => {
+  if (error) {
+    // The write failed...
+  } else {
+    alert("작성이 완료되었습니다");
+   location.href='studyboard_list.html';
+  }
+});
+
+    }
+      </script>
+  </head>
+  <body>
+    <div>
+           <form>
+               <table>
+                   <thead>
+                       <caption>글 쓰기</caption>
+                   </thead>
+                   <tbody>
+                       <tr>
+                           <th>제목 : </th>
+                           <td><input id="title" placeholder = "제목을 입력하세요"></td>
+                       </tr>
+                       <tr>
+                           <th>작성자 : </th>
+                           <td id="username"></td>
+                       </tr>
+                       <tr>
+                           <th>내용 : </th>
+                           <td><textarea id='contents' cols="60" rows="10" placeholder = "내용을 입력하세요"></textarea></td>
+                       </tr>
+                   </tbody>
+               </table>
+               <button type="button" onclick="db();">저장</button>
+
+               <button type="button" onclick="location.href='studyboard_list.html'" >취소</button>
+
+           </form>
+       </div>
+  </body>
+</html>
