@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="html5/assets/css/main.css" />
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
@@ -74,15 +76,83 @@
 
     }
       </script>
+      <style>
+      body{
+
+              font-family:"맑은 고딕";
+      }
+          ul, li{
+              list-style:none;
+              padding:0;
+              margin:0;
+      }
+
+          #mainWrapper{
+              width: 1000px;
+              margin: 0 auto; /*가운데 정렬*/
+          }
+
+      #mainWrapper > ul > li:first-child {
+              text-align: center;
+              font-size:14pt;
+              height:40px;
+              vertical-align:baseline;
+              line-height:30px;
+      }
+      </style>
   </head>
-  <body>
-    <div>
+
+  <body class="is-preload">
+    <div id="wrapper">
+      <div id="main">
+        <div class="inner">
+
+        <section>
+          <div>
+            <label><h3>카테고리</h3></label>
+              <li id="writeCategory">
+                <div>
+                  <select id="writeCategoryOption">
+                    <option value='A'>농구</option>
+                    <option value='T'>축구</option>
+                    <option value='C'>배구</option>
+                  </select>
+                </div>
+              </li>
+            </div>
+            <div style="margin-top:55px;">
+              <label><h3>제목</h3></label>
+              <input type="text" id='title' placeholder = "제목을 입력하세요"></input>
+            </div>
+            <div style="margin-top:55px">
+              <label><h3>내용</h3></label>
+              <textarea id='contents' cols="60" rows="10" placeholder = "내용을 입력하세요"></textarea>
+            </div>
+            <div style="margin-top:55px">
+              <button type="button" onclick="db();">저장</button>
+
+              <button type="button" onclick="location.href='studyboard_list.html'" >취소</button>
+            </div>
+
+            <!--
            <form>
                <table>
-                   <thead>
-                       <caption>글 쓰기</caption>
-                   </thead>
                    <tbody>
+                      <tr>
+                        <th>카테고리 :
+                        <li>
+                            <div style=" margin: 5px 5px 5px 5px">
+                                <select id='writeCategoryOption' >
+                                    <option value='A'>농구</option>
+                                    <option value='T'>축구</option>
+                                    <option value='C'>배구</option>
+
+                                </select>
+
+                            </div>
+                        </li>
+                        </th>
+                      </tr>
                        <tr>
                            <th>제목 : </th>
                            <td><input id="title" placeholder = "제목을 입력하세요"></td>
@@ -101,7 +171,8 @@
 
                <button type="button" onclick="location.href='studyboard_list.html'" >취소</button>
 
-           </form>
-       </div>
+           </form>-->
+       </div> </div></div>
+
   </body>
 </html>

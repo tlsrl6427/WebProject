@@ -4,6 +4,8 @@
 	<head>
 		<title></title>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="html5/assets/css/main.css" />
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
@@ -55,9 +57,56 @@
     }
 
       </script>
+			<style>
+			body{
+
+							font-family:"맑은 고딕";
+			}
+					ul, li{
+							list-style:none;
+							padding:0;
+							margin:0;
+			}
+
+					#mainWrapper{
+							width: 1000px;
+							margin: 0 auto; /*가운데 정렬*/
+					}
+
+			#mainWrapper > ul > li:first-child {
+							text-align: center;
+							font-size:14pt;
+							height:40px;
+							vertical-align:baseline;
+							line-height:30px;
+			}
+			</style>
   </head>
-  <body>
-    <div>
+  <body class="is-preload">
+    <div id="wrapper">
+			<div id="main">
+				<div class="inner">
+					<section>
+						<div>
+							<label id="title" style="text-align:center"><h2>글 제목</h2></label>
+						</div>
+						<!--카테고리도 필요함-->
+						<div style="margin-top:45px">
+							<label><h3>작성자</h3></label>
+							<textarea id="username" cols="10" rows="1" readonly></textarea>
+						</div>
+						<div style="margin-top:45px">
+							<label><h3>작성날짜</h3></label>
+							<textarea id="date"  cols="10" rows="1" readonly></textarea>
+						</div>
+						<div style="margin-top:45px">
+							<label><h3>내용</h3></label>
+							<textarea id='contents' cols="60" rows="10" readonly></textarea>
+						</div>
+						<div style="margin-top:55px; float:right">
+							<button type="button" onclick="location.href='studyboard_list.html'" >뒤로</button>
+						</div>
+						<!--
            <form>
                <table>
                    <thead>
@@ -80,7 +129,7 @@
                </table>
                <button type="button" onclick="location.href='studyboard_list.html'" >뒤로</button>
 
-           </form>
+           </form>-->
        </div>
   </body>
 </html>
