@@ -54,14 +54,16 @@
       var time=date+ "_" + d.getSeconds();
       var title = document.getElementById("title").value;
       var contents = document.getElementById("contents").value;
+      var username = name;
 
-      channelRef_user.child('board_info').push({"title": title, "time": time, "contents": contents});
+      channelRef_user.child('board_info').push({"title": title, "time": time, "contents": contents, "username": username});
      channelRef_list.push({
        "title":title,
        "time": time,
        "contents": contents,
-       "user": uid},
-       (error) => {
+       "userid": uid,
+       "username": username
+     },(error) => {
   if (error) {
     // The write failed...
   } else {

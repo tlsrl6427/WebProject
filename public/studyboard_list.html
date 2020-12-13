@@ -9,6 +9,11 @@
       <script src="html5/assets/js/breakpoints_main.js"></script>
       <script src="html5/assets/js/util.js"></script>
       <script src="html5/assets/js/main.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+      <script src="googlelogin.js?useEmulator=true"></script>
       <style>
       body{
 
@@ -95,6 +100,108 @@
 
 
       </style>
+<script>
+function createTable(testid, board_name, date, user_name){
+  var newLI = document.createElement("li");
+	newLI.setAttribute("id",testid+"+li");
+	document.getElementById("ulTable").appendChild(newLI);
+
+  var newUL = document.createElement("ul");
+	newUL.setAttribute("id",testid+"+ul");
+	document.getElementById(testid+"+li").appendChild(newUL);
+
+  var newLI_category = document.createElement("li");
+	newLI_category.setAttribute("id",testid+"+li_category");
+  newLI_category.innerHTML="카테고리";
+  newLI_category.style.textAlign="center";
+	document.getElementById(testid+"+ul").appendChild(newLI_category);
+
+  var newLI_title = document.createElement("li");
+	newLI_title.setAttribute("id",testid+"+li_title");
+  newLI_title.setAttribute("class", "left");
+	document.getElementById(testid+"+ul").appendChild(newLI_title);
+
+  var newA = document.createElement("a");
+	newA.setAttribute("id",testid+"+a");
+  temp = date.split("_");
+  date_splited = temp[1]+"/"+temp[2];
+  newA.setAttribute("href", "studyboard_contents.html?"+board_name+"?"+date_splited);
+  newA.style.color="#3D4449";
+	document.getElementById(testid+"+li_title").appendChild(newA);
+
+
+  var newP = document.createElement("p");
+  newP.setAttribute("id",testid+"+p");
+  newP.innerHTML=board_name;
+  document.getElementById(testid+"+a").appendChild(newP);
+
+  var newLI_date = document.createElement("li");
+	newLI_date.setAttribute("id",testid+"+li_date");
+  newLI_date.style.textAlign="center";
+  newLI_date.innerHTML=  date_splited;
+	document.getElementById(testid+"+ul").appendChild(newLI_date);
+
+
+  var newLI_user = document.createElement("li");
+	newLI_user.setAttribute("id",testid+"+li_user");
+  newLI_user.innerHTML=user_name;
+  newLI_user.style.textAlign="center";
+	document.getElementById(testid+"+ul").appendChild(newLI_user);
+
+  var newLI_level = document.createElement("li");
+	newLI_level.setAttribute("id",testid+"+li_level");
+  newLI_level.innerHTML=  "Lv0";
+  newLI_level.style.textAlign="center";
+	document.getElementById(testid+"+ul").appendChild(newLI_level);
+
+  var newLI_visit = document.createElement("li");
+	newLI_visit.setAttribute("id",testid+"+li_visit");
+  newLI_visit.innerHTML=  "1";
+  newLI_visit.style.textAlign="center";
+	document.getElementById(testid+"+ul").appendChild(newLI_visit);
+}
+
+function initApp(){
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				var id = "test";
+				var idnum =1;
+				console.log("로그인 상태");
+				name = user.displayName;
+				email = user.email;
+				photoUrl = user.photoURL;
+				emailVerified = user.emailVerified;
+				uid = user.uid;
+				var dataRef = firebase.database().ref('/board_List');
+				dataRef.once('value', (snapshot)=>{
+
+					snapshot.forEach((childSnapshot) => {
+					var childKey = childSnapshot.key;
+     			var childData = childSnapshot.val();
+
+					createTable(id+idnum, childData.title, childData.time, childData.username);
+
+					idnum++;
+					});
+
+				});
+
+			}else{
+				console.log("로그아웃 상태");
+			}
+		});
+}
+
+window.onload=function(){
+  initApp();
+}
+
+</script>
+
+
+
+
+
   </head>
   <body>
     <!-- 게시판 목록 -->
@@ -112,7 +219,7 @@
             </li>
 
 
-            <!-- 게시물이 출력될 영역-->
+            <!-- 게시물이 출력될 영역
             <li>
                 <ul>
                     <li style="text-align:center;">생활</li>
@@ -123,39 +230,7 @@
                     <li style="text-align:center;">0</li>
                 </ul>
             </li>
-
-            <li>
-                <ul>
-                    <li style="text-align:center;">스포츠</li>
-                    <li class="left"><a href="#" style="color:#3D4449"><p>제목제목제목제목1</p></a></li>
-                    <li style="text-align:center;">2020.11.30</li>
-                    <li style="text-align:center;">홍신기</li>
-                    <li style="text-align:center;">Lv0</li>
-                    <li style="text-align:center;">0</li>
-                </ul>
-            </li>
-
-            <li>
-                <ul>
-                    <li style="text-align:center;">게임</li>
-                    <li class="left"><a href="#" style="color:#3D4449"><p>제목제목제목제목1</p></a></li>
-                    <li style="text-align:center;">2020.11.30</li>
-                    <li style="text-align:center;">주형우</li>
-                    <li style="text-align:center;">Lv0</li>
-                    <li style="text-align:center;">0</li>
-                </ul>
-            </li>
-
-            <li>
-                <ul>
-                    <li style="text-align:center;">음악</li>
-                    <li class="left"><a href="#" style="color:#3D4449"><p>제목제목제목제목1</p></a></li>
-                    <li style="text-align:center;">2020.11.30</li>
-                    <li style="text-align:center;">장예주</li>
-                    <li style="text-align:center;">Lv0</li>
-                    <li style="text-align:center;">0</li>
-                </ul>
-            <li>
+-->
         </ul>
     </li>
 
