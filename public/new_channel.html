@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="html5/assets/css/main.css" />
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
@@ -73,9 +75,14 @@
 
   </head>
   <body>
-    <br>
-      채널 이름 : <input type='text' id="channel_name"/><br>
-      채널 로고: <input type="file" id="input"/><br>
-    <button onclick="db()">디비 등록</button>
+    <div style="margin:10px">
+      <label><h3>채널 이름</h3></label>
+      <input type='text' style="width:500px; id="channel_name"/>
+      <label style="margin-top:30px;"><h3>채널 로고</h3></label>
+      <input type="file" id="input"/>
+    </div>
+    <div style="margin-top:50px; margin-left:10px;">
+      <button onclick="db()">디비 등록</button>
+    </div>
   </body>
 </html>
