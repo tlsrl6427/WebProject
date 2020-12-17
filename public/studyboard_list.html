@@ -101,7 +101,7 @@
 
       </style>
 <script>
-function createTable(testid, board_name, date, user_name){
+function createTable(testid, board_name, date, user_name, category){
   var newLI = document.createElement("li");
 	newLI.setAttribute("id",testid+"+li");
 	document.getElementById("ulTable").appendChild(newLI);
@@ -112,7 +112,7 @@ function createTable(testid, board_name, date, user_name){
 
   var newLI_category = document.createElement("li");
 	newLI_category.setAttribute("id",testid+"+li_category");
-  newLI_category.innerHTML="카테고리";
+  newLI_category.innerHTML=category;
   newLI_category.style.textAlign="center";
 	document.getElementById(testid+"+ul").appendChild(newLI_category);
 
@@ -174,12 +174,58 @@ function initApp(){
 				uid = user.uid;
 				var dataRef = firebase.database().ref('/board_List');
 				dataRef.once('value', (snapshot)=>{
-
 					snapshot.forEach((childSnapshot) => {
 					var childKey = childSnapshot.key;
      			var childData = childSnapshot.val();
+          var category_name;
 
-					createTable(id+idnum, childData.title, childData.time, childData.username);
+          switch(childData.category){
+            case "basketball": category_name="카테고리";
+            break;
+            case "basketball": category_name="농구";
+            break;
+            case "baseball": category_name="야구";
+            break;
+            case "football": category_name="축구";
+            break;
+            case "swimming": category_name="수영";
+            break;
+            case "piano": category_name="피아노";
+            break;
+            case "guitar": category_name="기타";
+            break;
+            case "flute": category_name="플룻";
+            break;
+            case "violin": category_name="바이올린";
+            break;
+            case "cleaning": category_name="청소";
+            break;
+            case "saving": category_name="저축";
+            break;
+            case "cooking": category_name="요리";
+            break;
+            case "education": category_name="교육";
+            break;
+            case "web": category_name="웹프로그래밍";
+            break;
+            case "db": category_name="데이터베이스";
+            break;
+            case "data_com": category_name="데이터통신";
+            break;
+            case "language": category_name="언어(자바/C++)";
+            break;
+            case "lol": category_name="롤";
+            break;
+            case "fifa": category_name="피파";
+            break;
+            case "maplestory": category_name="메이플스토리";
+            break;
+            case "cartrider": category_name="카트라이더";
+
+
+          }
+
+					createTable(id+idnum, childData.title, childData.time, childData.username, category_name);
 
 					idnum++;
 					});
