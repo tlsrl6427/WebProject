@@ -94,16 +94,23 @@ function initApp(){
 				photoUrl = user.photoURL;
 				emailVerified = user.emailVerified;
 				uid = user.uid;
+
+				temp = location.href.split("/");
+				temp1 = temp[5].split(".");
+				console.log(temp1[0]);
+
 				var dataRef = firebase.database().ref('/channel_List');
 				dataRef.once('value', (snapshot)=>{
 					snapshot.forEach((childSnapshot) => {
 					var childKey = childSnapshot.key;
      			var childData = childSnapshot.val();
+					if(childData.category==temp1[0]){
 					console.log(childData.name+" "+id+idnum);
 					createDiv(id+(++idnum), childData.name);
 					url = childData.imgpath;
 					var img = document.getElementById(id+idnum+"_img");
 					img.src = url;
+				}
 					});
 
 				});
@@ -352,7 +359,7 @@ if (user != null) {
     									<li><a href="../game/cartrider.html">카트라이더</a></li>
     								</ul>
     							</li>
-    							<li><a href="index.html">스터디게시판</a></li>
+    							<li><a href="../../studyboard.html">스터디게시판</a></li>
 
     						</ul>
     					</nav>
