@@ -6,11 +6,139 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="html5/assets/css/main.css" />
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+		<script src="googlelogin.js?useEmulator=true"></script>
+		<script src="openPopup.js"></script>
 <script>
 function openWindowPop(url, name){
     var options = 'top=200, left=500, width=250, height=120, status=no, menubar=no, toolbar=no, resizable=no, fullscreen=no, location=no';
     window.open(url, name, options);
 }
+
+function resize(img){
+
+   var width = img.width;
+   var height = img.height;
+
+   var maxWidth = 200;
+   var maxHeight = 160;
+
+   if(width > maxWidth || height > maxHeight){
+
+      if(width > height){
+         resizeWidth = maxWidth;
+         resizeHeight = (height * resizeWidth) / width;
+
+      }else{
+         resizeHeight = maxHeight;
+         resizeWidth = (width * resizeHeight) / height;
+      }
+
+   }else{
+      resizeWidth = width;
+      resizeHeight = height;
+   }
+
+   img.width = resizeWidth;
+   img.height = resizeHeight;
+}
+
+function createDiv1(testid, name){
+		var newSPAN = document.createElement("span");
+		newSPAN.setAttribute("id", testid+"_span1");
+		newSPAN.style.padding="0px 40px 40px 0px";
+		document.getElementById("sec1").appendChild(newSPAN);
+
+		var newA = document.createElement("a");
+		newA.setAttribute("id", testid+"_a1");
+		newA.setAttribute("href","channel_private.html?"+name);
+		newA.setAttribute("class","test");
+		document.getElementById(testid+"_span1").appendChild(newA);
+
+		var newImg = document.createElement("img");
+		newImg.setAttribute("id", testid+"_img");
+		newImg.style.width="200px";
+		newImg.style.height="160px";
+		newImg.setAttribute("onload", "resize(this)");
+		//newImg.style.display="block";
+		document.getElementById(testid+"_a1").appendChild(newImg);
+}
+
+function createDiv2(testid, name){
+		var newSPAN2 = document.createElement("span");
+		newSPAN.setAttribute("id", testid+"_span2");
+		newSPAN.style.padding="0px 40px 40px 0px";
+		document.getElementById("sec2").appendChild(newSPAN2);
+
+		var newA2 = document.createElement("a");
+		newA.setAttribute("id", testid+"_a2");
+		newA.setAttribute("href","channel_private.html?"+name);
+		newA.setAttribute("class","test");
+		document.getElementById(testid+"_span2").appendChild(newA2);
+
+		var newImg2 = document.createElement("img");
+		newImg.setAttribute("id", testid+"_img2");
+		newImg.style.width="200px";
+		newImg.style.height="160px";
+		newImg.setAttribute("onload", "resize(this)");
+		//newImg.style.display="block";
+		document.getElementById(testid+"_a2").appendChild(newImg2);
+}
+
+function initApp(){
+	// Listening for auth state changes.
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				var id = "test";
+				var idnum =1;
+				console.log("로그인 상태");
+				name = user.displayName;
+				email = user.email;
+				photoUrl = user.photoURL;
+				emailVerified = user.emailVerified;
+				uid = user.uid;
+
+				//temp = location.href.split("/");
+				//temp1 = temp[5].split(".");
+				//console.log(temp1[0]);
+				var count =0;
+				var dataRef = firebase.database().ref('/channel_List');
+				dataRef.once('value', (snapshot)=>{
+					try{
+						snapshot.forEach((childSnapshot) => {
+					var childKey = childSnapshot.key;
+     			var childData = childSnapshot.val();
+					createDiv1(id+(++idnum), childData.name);
+					//createDiv2(id+(++idnum), childData.name);
+					url = childData.imgpath;
+					var img = document.getElementById(id+idnum+"_img");
+					img.src = url;
+					count++;
+					if(count>=4)
+					throw Break;
+					});
+				}catch(e){
+					if(e!=Break) throw Break;
+				}
+
+				});
+
+			} else {
+					console.log("로그아웃 상태");
+
+		}
+
+	});
+
+}
+
+window.onload=function(){
+	initApp();
+}
+
 </script>
 
 <script>
@@ -87,7 +215,7 @@ window.addEventListener("message", function(event){
 
 
 
-								<section>
+								<section id="sec1">
 
 									<header class="major">
 										<h2>인기 채널</h2>
@@ -97,10 +225,7 @@ window.addEventListener("message", function(event){
 											<li><a href="#" class="button">더보기</a></li>
 										</ul>
 									</span>
-									<span style="padding:0px 40px 40px 0px">
-										<a href="#" class="test"> <video src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\CAT-1.mp4" width="200px" height="160px"
-										controls loop></video> </a>		<!--poster="#" 하면 대표 이미지 선택-->
-									</span>
+									<!--
 									<span style="padding:0px 40px 40px 0px">
 										<a href="#" class="test"> <video src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\CAT-1.mp4" width="200px" height="160px"
 										controls loop></video> </a>
@@ -113,25 +238,30 @@ window.addEventListener("message", function(event){
 										<a href="#" class="test"> <video src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\CAT-1.mp4" width="200px" height="160px"
 										controls loop></video> </a>
 									</span>
-
+									<span style="padding:0px 40px 40px 0px">
+										<a href="#" class="test"> <video src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\CAT-1.mp4" width="200px" height="160px"
+										controls loop></video> </a>
+									</span>
+								-->
 
 
 								</section>
 
 
 							<!-- Section -->
-							<section>
+							<section id="sec2">
 								<header class="major">
-									<h2>게임</h2>
+									<h2>최근 채널</h2>
 								</header>
 								<span style="float:right">
 									<ul class="actions">
 										<li><a href="#" class="button">더보기</a></li>
 									</ul>
 								</span>
+								<!--
 								<span style="padding:0px 40px 40px 0px">
 									<a href="#" class="test"> <video src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\CAT-1.mp4" width="200px" height="160px"
-									controls loop></video> </a>		<!--poster="#" 하면 대표 이미지 선택-->
+									controls loop></video> </a>		poster="#" 하면 대표 이미지 선택
 								</span>
 								<span style="padding:0px 40px 40px 0px">
 									<a href="#" class="test"> <video src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\CAT-1.mp4" width="200px" height="160px"
@@ -145,7 +275,7 @@ window.addEventListener("message", function(event){
 									<a href="#" class="test"> <video src="C:\Users\hw\Desktop\고웹팀플자료\팀플용 이미지\CAT-1.mp4" width="200px" height="160px"
 									controls loop></video> </a>
 								</span>
-
+-->
 
 							</section>
 
