@@ -265,6 +265,10 @@
 						 							});
 
 
+
+
+
+
 						uploadTask1.snapshot.ref.getDownloadURL().then(function(downloadURL1) {
 							channelRef_user.child(childKey1).child("video_info").push({"name": video_name, "time": time, "videopath": downloadURL1, "thumnnailpath": childData1.imgpath,
 						"category": selected_opt});
@@ -278,6 +282,23 @@
 								if(childData2.name == channel_name){
 								channelRef_list.child(childKey2).child("video_info").push({"name":video_name, "time": time, "videopath": downloadURL1, "user": uid, "thumnnailpath": childData1.imgpath,
 							"category": selected_opt});
+							console.log("T씨발");
+
+// 구독자한테 띄워주기
+/*
+							firebase.database().ref('channel_List/'+childKey2+'/subscribe/subscribeuser/').once('value',(snapshot77)=>{
+								snapshot77.forEach((childSnapshot77) => {
+									var userkey77 = childSnapshot77.key;
+									console.log(userkey77);
+									var message = "구독하신 채널"+name+"동영상이"+time+"에 업로드 되었습니다";
+
+									var subcribelogRef = firebase.database().ref('/userInfo/'+userkey+'/subscribeupdate/');
+									subcribelogRef.child(time).set({ message: message });
+
+								});
+
+							});*/
+/////////
 
 							}
 							});
