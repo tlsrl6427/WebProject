@@ -76,8 +76,6 @@
 
 
 
-
-
 		}
 
 			function moveBtn(){
@@ -95,6 +93,121 @@
 				}
 			}
 
+//쓰면 안되는 적역변수 채널 key값 받아옴
+
+var checkchannelname;
+//구독취소
+		function CancelSubs(){
+
+			firebase.auth().onAuthStateChanged(function(user) {
+					if (user) {
+						uid = user.uid;
+
+						var cancelsubRef = firebase.database().ref('/channel_List/'+checkchannelname+'/subscribe/subscribeuser');
+
+						cancelsubRef.once('value',(snapshot) =>{
+							snapshot.forEach((childSnapshot)=>{
+								var deletekey = childSnapshot.key;
+
+
+								if( deletekey == uid){
+
+									var deletekeyRef = firebase.database().ref('/channel_List/'+checkchannelname+'/subscribe/subscribeuser');
+									deletekeyRef.child(uid).remove();
+									var subs1 = document.getElementById("subs1");
+									subs1.innerHTML=" 구독";
+									subs1.onclick="CreateSubs();";
+								}
+
+							});
+						});
+					}
+
+		});
+	}
+
+// 구독
+
+function CreateSubs(){
+		var subs1 = document.getElementById("subs1");
+		if(subs1.textContent == "구독"){
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				uid = user.uid;
+				name = user.displayName;
+
+
+				var createsubRef = firebase.database().ref('/channel_List/'+checkchannelname+'/subscribe/subscribeuser');
+				/*
+				var plussubnumRef = firebase.database().ref('/channel_List/'+checkchannelname+'/subscribe');
+				var subscribenum;
+				plussubnumRef.once('value', (snapshot)=>{
+				 	subscribenum = snapshot.val().subscribenum;
+					subscribenum +=1;
+				}	);
+				plussubnumRef.update({
+					subscribenum : subscribenum
+
+
+				});
+				*/
+				createsubRef.child(uid).set(
+					 { username: name
+					 });
+
+
+					subs1.innerHTML="구독취소";
+					//subs1.onclick="CancelSubs();";
+			}
+
+});
+}else{
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				uid = user.uid;
+
+				var cancelsubRef = firebase.database().ref('/channel_List/'+checkchannelname+'/subscribe/subscribeuser');
+
+				cancelsubRef.once('value',(snapshot)=>{
+					snapshot.forEach((childSnapshot)=>{
+						var deletekey = childSnapshot.key;
+
+
+						if( deletekey == uid){
+/*
+							var plussubnumRef = firebase.database().ref('/channel_List/'+checkchannelname+'/subscribe');
+							var subscribenum;
+							plussubnumRef.once('value', (snapshot)=>{
+								subscribenum = snapshot.val().subscribenum;
+								subscribenum -=1;
+							}	);
+							plussubnumRef.update({
+								subscribenum : subscribenum
+
+
+							});
+*/
+
+							var deletekeyRef = firebase.database().ref('/channel_List/'+checkchannelname+'/subscribe/subscribeuser');
+							deletekeyRef.child(uid).remove();
+							var subs1 = document.getElementById("subs1");
+							subs1.innerHTML="구독";
+							//subs1.onclick="CreateSubs();";
+						}
+
+					});
+				});
+			}
+
+});
+
+}
+
+
+}
+
+
+///////////////////////////////
 
 		function initApp(){
 			firebase.auth().onAuthStateChanged(function(user) {
@@ -106,6 +219,8 @@
 						emailVerified = user.emailVerified;
 						uid = user.uid;
 			temp = location.href.split("?");
+
+
 
 			var channelRef_user = firebase.database().ref('/channel_List');
 			channelRef_user.once('value', (snapshot)=>{
@@ -124,6 +239,32 @@
 					var a1 = document.getElementById("a1");
 					a1.setAttribute("href", "upload.html?"+childData.name);
 					a1.innerHTML="영상 업로드";
+
+					checkchannelname = childKey;
+
+
+// 사용자가 구독중일때 구독취소로 변경
+					var checksubsRef = firebase.database().ref('/channel_List/'+childKey+'/subscribe/subscribeuser');
+					checksubsRef.once('value', (snapshot) => {
+						snapshot.forEach((childSnapshot) =>{
+							var useridkey = childSnapshot.key;
+							var subs1 = document.getElementById("subs1");
+							if(useridkey == uid){
+
+								subs1.innerHTML=" 구독취소";
+					//			subs1.onclick= "CancelSubs() ;";
+								console.log(subs1.textContent);
+							}
+							else{
+								subs1.innerHTML="구독"
+								console.log(subs1.textContent);
+							}
+
+
+						});
+
+					});
+
 
 					var videoRef_channel = firebase.database().ref('/channel_List/'+childKey+"/video_info");
 
@@ -266,16 +407,17 @@
                   <a href="#" class="test"> <img id="img1" src="#" onload=resize(this)></img> </a>
                 </div>
               	<div style="height: 120px; width: 400px; left:160px; width:30%; position:absolute;margin:20px;">
-								  <a href="#" onclick="goodok();">
+								  <a href="#" onclick="">
 										<h2 id="h2_1"style="margin-top:5px; margin-left:15px">구독</h2>
-									</a>
 										<p style="margin-left:15px">구독자수, 영상수<br>
 										<a href="#">채널주인스펙확인</a></p>
 
 								</div>
 
                 <div style="height: 120px; width: 100px; float:right;margin:20px;">
+
                   <ul class="actions" style="margin-top:40px;" >
+										<li><button id="subs1"  onclick= "CreateSubs();" class="button">구독</button></li>
                     <li><a id="a1" href="" class="button">-</a></li>
                   </ul>
                 </div>
