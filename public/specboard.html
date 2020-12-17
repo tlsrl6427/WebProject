@@ -61,10 +61,12 @@ body{
 				height:35px;
 }
 
-    #ulTable > li > ul > li:first-child               {width:20%;} /*No 열 크기*/
+    #ulTable > li > ul > li:first-child               {width:10%;} /*No 열 크기*/
     #ulTable > li > ul > li:first-child +li           {width:40%;} /*제목 열 크기*/
-    #ulTable > li > ul > li:first-child +li+li        {width:20%;} /*작성일 열 크기*/
-		#ulTable > li > ul > li:first-child +li+li+li			{width:20%;}
+    #ulTable > li > ul > li:first-child +li+li        {width:15%;} /*작성일 열 크기*/
+    #ulTable > li > ul > li:first-child +li+li+li     {width:15%;} /*작성자 열 크기*/
+    #ulTable > li > ul > li:first-child +li+li+li+li{width:10%;} /*조회수 열 크기*/
+		#ulTable > li > ul > li:first-child +li+li+li+li+li{width:10%;} /*조회수 열 크기*/
 
 
     #divPaging {
@@ -119,7 +121,26 @@ body{
 		</section>
 
 		<ul class="icons">
-			<li><a href="javascript:openWindowPop('login.html', 'popup');" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449"> 로그인</span></a></li>
+			<li><a href="javascript:openWindowPop('login.html', 'popup');" class="fa fa-user-circle fa-lg"><span class="label" style="color:#3D4449">
+				<a id="logURL" href="javascript:openWindowPop('login.html', 'popup');">
+					로그인
+				</a>
+			</span>
+			<script>
+				switch (localStorage.getItem("logined")) {
+					case 'logined':
+							document.getElementById("logURL").innerHTML="마이페이지";
+							document.getElementById("logURL").setAttribute('href', 'mychannel.html');
+										break;
+					case '':
+							document.getElementById("logURL").innerHTML="로그인";
+							document.getElementById("logURL").setAttribute('href', "javascript:openWindowPop('login.html', 'popup');");
+										break;
+								default:
+
+					}
+			</script>
+		</a></li>
 		</ul>
 
 	</header>
@@ -130,8 +151,8 @@ body{
 				<div style="float:right; margin: 5px 5px 5px 5px">
 						<select id='selSearchOption' >
 								<option value='A'>최신순</option>
-								<option value='T'>레벨순</option>
-								<option value='C'>카테고리순</option>
+								<option value='T'>조회순</option>
+								<option value='C'>레벨순</option>
 						</select>
 
 				</div>
@@ -142,85 +163,27 @@ body{
 			<ul>
 					<!-- 게시판 제목 -->
 					<header class="major" style="margin-top:20px; float:left;">
-						<h2>스팩게시판</h2>
+						<h2>스터디게시판</h2>
 					</header>
 
-					<!-- 게시판 목록  -->
-					<li>
-							<ul id ="ulTable">
-									<li>
-											<ul>
-													<li>카테고리</li>
-													<li>제목</li>
-													<li>작성일</li>
-													<li>레벨</li>
-											</ul>
-									</li>
-									<!-- 게시물이 출력될 영역 -->
-									<li>
-											<ul>
-													<li style="text-align:center;">생활</li>
-													<li class="left" ><a href="#" style="color:#3D4449"><p>제목제목제목제목1</p></a></li>
-													<li style="text-align:center;">2020.11.30</li>
-													<li style="text-align:center;">Lv0</liv>
-											</ul>
-									</li>
 
-									<li>
-											<ul>
-													<li style="text-align:center;">스포츠</li>
-													<li class="left"><a href="#" style="color:#3D4449"><p>제목제목제목제목1</p></a></li>
-													<li style="text-align:center;">2020.11.30</li>
-													<li style="text-align:center;">Lv0</liv>
-											</ul>
-									</li>
+	  	</ul>
+			<li>
+				<ul>
+					<div id="contents">
+						<object type="text/html" height="600px" width="800px" data="specboard_list.html">
 
-									<li>
-											<ul>
-													<li style="text-align:center;">게임</li>
-													<li class="left"><a href="#" style="color:#3D4449"><p>제목제목제목제목1</p></a></li>
-													<li style="text-align:center;">2020.11.30</li>
-													<li style="text-align:center;">Lv0</liv>
-											</ul>
-									</li>
-
-									<li>
-											<ul>
-													<li style="text-align:center;">음악</li>
-													<li class="left"><a href="#" style="color:#3D4449"><p>제목제목제목제목1</p></a></li>
-													<li style="text-align:center;">2020.11.30</li>
-													<li style="text-align:center;">Lv0</liv>
-											</ul>
-									<li>
-							</ul>
-					</li>
-
-					<!-- 게시판 페이징 영역 -->
-					<li>
-							<div id="divPaging">
-									<div><a href="#" style="color:#3D4449"><p>◀</a></div>
-										 <div><a href="#" style="color:#3D4449"><p><b>1</b></p></a></div>
-									<div><a href="#" style="color:#3D4449"><p>2</p></a></div>
-									<div><a href="#" style="color:#3D4449"><p>3</p></a></div>
-									<div><a href="#" style="color:#3D4449"><p>4</p></a></div>
-									<div><a href="#" style="color:#3D4449"><p>5</p></a></div>
-									<div><a href="#" style="color:#3D4449"><p>▶</a></div>
-							</div>
-					</li>
-
-			</ul>
-
-			<div style="height: 210px; float:right; ">
-				<ul class="actions" >
-					<li><a href="#" class="button">글쓰기</a></li>
+						</object>
+					</div>
 				</ul>
-			</div>
+			</li>
+
 	</div>
 
 
 
-</div></div>
 
+</div></div>
 
 
 
@@ -234,18 +197,60 @@ body{
 
 
 				    <!-- Menu -->
-						<nav id="menu">
-							<header class="major">
-								<h2>Menu</h2>
-							</header>
-							<ul>
-								<li><a href="mychannel.html">내 채널 관리</a></li>
-								<li><a href="subscribed_channel.html">구독 채널 관리</a></li>
-								<li><a href="specboard.html">내 스팩 관리</a></li>
-								<li><a href="javascript:openWindowPop('login.html', 'popup');">로그아웃</a></li>
+				      <nav id="menu">
+				        <header class="major">
+				          <h2>카테고리</h2>
+				        </header>
+				        <ul>
+				          <li>
+				            <span class="opener">스포츠</span>
+				            <ul>
+				              <li><a href="categories/sports/basketball.html">농구</a></li>
+				              <li><a href="categories/sports/baseball.html">야구</a></li>
+				              <li><a href="categories/sports/football.html">축구</a></li>
+				              <li><a href="categories/sports/swimming.html">수영</a></li>
+				            </ul>
+				          </li>
+				          <li>
+				            <span class="opener">음악</span>
+				            <ul>
+				              <li><a href="categories/music/piano.html">피아노</a></li>
+				              <li><a href="categories/music/guitar.html">기타</a></li>
+				              <li><a href="categories/music/flute.html">플룻</a></li>
+				              <li><a href="categories/music/violin.html">바이올린</a></li>
+				            </ul>
+				          </li>
+				          <li>
+				            <span class="opener">생활</span>
+				            <ul>
+				              <li><a href="categories/lifestyle/cleaning.html">청소</a></li>
+				              <li><a href="categories/lifestyle/saving.html">저축</a></li>
+				              <li><a href="categories/lifestyle/cooking.html">요리</a></li>
+				              <li><a href="categories/lifestyle/education.html">교육</a></li>
+				            </ul>
+				          </li>
+				          <li>
+				            <span class="opener">컴퓨터</span>
+				            <ul>
+				              <li><a href="categories/compter/web.html">웹프로그래밍</a></li>
+				              <li><a href="categories/compter/db.html">데이터베이스</a></li>
+				              <li><a href="categories/compter/data_com.html">데이터통신</a></li>
+				              <li><a href="categories/compter/language.html">언어(자바/c++)</a></li>
+				            </ul>
+				          </li>
+				          <li>
+				            <span class="opener">게임</span>
+				            <ul>
+				              <li><a href="categories/game/lol.html">롤</a></li>
+				              <li><a href="categories/game/fifa.html">피파</a></li>
+				              <li><a href="categories/game/maplestory.html">메이플</a></li>
+				              <li><a href="categories/game/cartrider.html">카트라이더</a></li>
+				            </ul>
+				          </li>
+									<li><a href="studyboard.html">스터디게시판</a></li>
 
-							</ul>
-						</nav>
+				        </ul>
+				      </nav>
 
 
 						</div>

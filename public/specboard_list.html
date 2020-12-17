@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    	<link rel="stylesheet" href="html5/assets/css/main.css" />
+      <script src="html5/assets/js/jquery_main.js"></script>
+      <script src="html5/assets/js/browser_main.js"></script>
+      <script src="html5/assets/js/breakpoints_main.js"></script>
+      <script src="html5/assets/js/util.js"></script>
+      <script src="html5/assets/js/main.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-storage.js"></script>
+      <script src="googlelogin.js?useEmulator=true"></script>
+      <style>
+      body{
+
+              font-family:"맑은 고딕";
+      }
+          ul, li{
+              list-style:none;
+              padding:0;
+              margin:0;
+      }
+
+          #mainWrapper{
+              width: 1000px;
+              margin: 0 auto; /*가운데 정렬*/
+          }
+
+      #mainWrapper > ul > li:first-child {
+              text-align: center;
+              font-size:14pt;
+              height:40px;
+              vertical-align:baseline;
+              line-height:30px;
+      }
+
+          #ulTable {margin-top:10px;}
+
+
+          #ulTable > li:first-child > ul > li {
+              background-color:#F56A6A;
+              font-weight:bold;
+              text-align:center;
+      				color:#fff;
+      }
+
+          #ulTable > li > ul {
+              clear:both;
+              padding:0px auto;
+              position:relative;
+              min-width:40px;
+      }
+          #ulTable > li > ul > li {
+              float:left;
+              font-size:10pt;
+              border-bottom:1px solid silver;
+              vertical-align:baseline;
+      				line-height:35px;
+      				height:35px;
+      }
+
+          #ulTable > li > ul > li:first-child               {width:10%;} /*No 열 크기*/
+          #ulTable > li > ul > li:first-child +li           {width:40%;} /*제목 열 크기*/
+          #ulTable > li > ul > li:first-child +li+li        {width:15%;} /*작성일 열 크기*/
+          #ulTable > li > ul > li:first-child +li+li+li     {width:15%;} /*작성자 열 크기*/
+          #ulTable > li > ul > li:first-child +li+li+li+li{width:10%;} /*조회수 열 크기*/
+      		#ulTable > li > ul > li:first-child +li+li+li+li+li{width:10%;} /*조회수 열 크기*/
+
+
+          #divPaging {
+                clear:both;
+              margin:0 auto;
+              width:220px;
+              height:50px;
+      }
+
+          #divPaging > div {
+              float:left;
+              width: 30px;
+              margin:0 auto;
+              text-align:center;
+      }
+
+          #liSearchOption {clear:both;}
+          #liSearchOption > div {
+              margin:0 auto;
+              margin-top: 30px;
+              width:auto;
+              height:100px;
+
+      }
+
+          .left {
+              text-align : left;
+      }
+
+
+      </style>
+<script>
+function createTable(testid, board_name, date, user_name, category){
+  var newLI = document.createElement("li");
+	newLI.setAttribute("id",testid+"+li");
+	document.getElementById("ulTable").appendChild(newLI);
+
+  var newUL = document.createElement("ul");
+	newUL.setAttribute("id",testid+"+ul");
+	document.getElementById(testid+"+li").appendChild(newUL);
+
+  var newLI_category = document.createElement("li");
+	newLI_category.setAttribute("id",testid+"+li_category");
+  newLI_category.innerHTML=category;
+  newLI_category.style.textAlign="center";
+	document.getElementById(testid+"+ul").appendChild(newLI_category);
+
+  var newLI_title = document.createElement("li");
+	newLI_title.setAttribute("id",testid+"+li_title");
+  newLI_title.setAttribute("class", "left");
+	document.getElementById(testid+"+ul").appendChild(newLI_title);
+
+  var newA = document.createElement("a");
+	newA.setAttribute("id",testid+"+a");
+  temp = date.split("_");
+  date_splited = temp[1]+"/"+temp[2];
+  newA.setAttribute("href", "specboard_contents.html?"+board_name+"?"+date_splited);
+  newA.style.color="#3D4449";
+	document.getElementById(testid+"+li_title").appendChild(newA);
+
+
+  var newP = document.createElement("p");
+  newP.setAttribute("id",testid+"+p");
+  newP.innerHTML=board_name;
+  document.getElementById(testid+"+a").appendChild(newP);
+
+  var newLI_date = document.createElement("li");
+	newLI_date.setAttribute("id",testid+"+li_date");
+  newLI_date.style.textAlign="center";
+  newLI_date.innerHTML=  date_splited;
+	document.getElementById(testid+"+ul").appendChild(newLI_date);
+
+
+  var newLI_user = document.createElement("li");
+	newLI_user.setAttribute("id",testid+"+li_user");
+  newLI_user.innerHTML=user_name;
+  newLI_user.style.textAlign="center";
+	document.getElementById(testid+"+ul").appendChild(newLI_user);
+
+  var newLI_level = document.createElement("li");
+	newLI_level.setAttribute("id",testid+"+li_level");
+  newLI_level.innerHTML=  "Lv0";
+  newLI_level.style.textAlign="center";
+	document.getElementById(testid+"+ul").appendChild(newLI_level);
+
+  var newLI_visit = document.createElement("li");
+	newLI_visit.setAttribute("id",testid+"+li_visit");
+  newLI_visit.innerHTML=  "1";
+  newLI_visit.style.textAlign="center";
+	document.getElementById(testid+"+ul").appendChild(newLI_visit);
+}
+
+function initApp(){
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				var id = "test";
+				var idnum =1;
+				console.log("로그인 상태");
+				name = user.displayName;
+				email = user.email;
+				photoUrl = user.photoURL;
+				emailVerified = user.emailVerified;
+				uid = user.uid;
+				var dataRef = firebase.database().ref('/spec_List');
+				dataRef.once('value', (snapshot)=>{
+					snapshot.forEach((childSnapshot) => {
+					var childKey = childSnapshot.key;
+     			var childData = childSnapshot.val();
+          var category_name;
+
+          switch(childData.category){
+            case "basketball": category_name="카테고리";
+            break;
+            case "basketball": category_name="농구";
+            break;
+            case "baseball": category_name="야구";
+            break;
+            case "football": category_name="축구";
+            break;
+            case "swimming": category_name="수영";
+            break;
+            case "piano": category_name="피아노";
+            break;
+            case "guitar": category_name="기타";
+            break;
+            case "flute": category_name="플룻";
+            break;
+            case "violin": category_name="바이올린";
+            break;
+            case "cleaning": category_name="청소";
+            break;
+            case "saving": category_name="저축";
+            break;
+            case "cooking": category_name="요리";
+            break;
+            case "education": category_name="교육";
+            break;
+            case "web": category_name="웹프로그래밍";
+            break;
+            case "db": category_name="데이터베이스";
+            break;
+            case "data_com": category_name="데이터통신";
+            break;
+            case "language": category_name="언어(자바/C++)";
+            break;
+            case "lol": category_name="롤";
+            break;
+            case "fifa": category_name="피파";
+            break;
+            case "maplestory": category_name="메이플스토리";
+            break;
+            case "cartrider": category_name="카트라이더";
+
+
+          }
+
+					createTable(id+idnum, childData.title, childData.time, childData.username, category_name);
+
+					idnum++;
+					});
+
+				});
+
+			}else{
+				console.log("로그아웃 상태");
+			}
+		});
+}
+
+window.onload=function(){
+  initApp();
+}
+
+</script>
+
+
+
+
+
+  </head>
+  <body>
+    <!-- 게시판 목록 -->
+    <li>
+        <ul id ="ulTable">
+            <li>
+                <ul>
+                    <li>카테고리</li>
+                    <li>제목</li>
+                    <li>작성일</li>
+                    <li>작성자</li>
+                    <li>레벨</li>
+                    <li>조회수</li>
+                </ul>
+            </li>
+
+
+            <!-- 게시물이 출력될 영역
+            <li>
+                <ul>
+                    <li style="text-align:center;">생활</li>
+                    <li class="left"><a href="#" style="color:#3D4449"><p>제목제목제목제목1</p></a></li>
+                    <li style="text-align:center;">2020.11.30</li>
+                    <li style="text-align:center;">홍신기</li>
+                    <li style="text-align:center;">Lv0</li>
+                    <li style="text-align:center;">0</li>
+                </ul>
+            </li>
+-->
+        </ul>
+    </li>
+
+
+
+
+
+
+    <!-- 게시판 페이징 영역 -->
+    <li>
+        <div id="divPaging">
+            <div><a href="#" style="color:#3D4449"><p>◀</a></div>
+               <div><a href="#" style="color:#3D4449"><p><b>1</b></p></a></div>
+            <div><a href="#" style="color:#3D4449"><p>2</p></a></div>
+            <div><a href="#" style="color:#3D4449"><p>3</p></a></div>
+            <div><a href="#" style="color:#3D4449"><p>4</p></a></div>
+            <div><a href="#" style="color:#3D4449"><p>5</p></a></div>
+            <div><a href="#" style="color:#3D4449"><p>▶</a></div>
+        </div>
+    </li>
+
+
+  <!-- 글쓰기 버튼 영역 -->
+  <div style="height: 210px; float:right; ">
+      <ul class="actions" >
+        <li><a href="specboard_write.html" class="button">글쓰기</a></li>
+      </ul>
+  </div>
+
+
+  </body>
+</html>
